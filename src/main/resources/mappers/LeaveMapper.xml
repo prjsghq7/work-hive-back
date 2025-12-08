@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dev.workhiveback.mappers.LeaveMapper">
+    <select id="selectCalendarData" resultType="com.dev.workhiveback.dtos.leave.CalendarDto">
+        SELECT `o`.`index`        AS `index`,
+               `t`.`display_text` AS `typeText`,
+               `o`.`start_date`   AS `startDate`,
+               `o`.`end_date`     AS `endDate`,
+               'dayOffs'          AS `calendarType`
+        FROM `wh`.`day_offs` AS `o`
+                 LEFT JOIN `wh`.`day_offs_states` AS `s` ON `o`.`state` = `s`.`code`
+                 LEFT JOIN `wh`.`day_offs_types` AS `t` ON `o`.`type` = `t`.`code`
+        WHERE `s`.`code` = 3
+    </select>
+</mapper>
