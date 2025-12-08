@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dev.workhiveback.mappers.UserMapper">
+    <insert id="register">
+        insert into `wh`.`users`(id, password) VALUES (#{id},#{password})
+    </insert>
+
+    <select id="selectById" resultType="com.dev.workhiveback.dtos.LoginDto">
+        select `id`       as 'id',
+               `password` as 'password'
+        from `wh`.`users`
+        where `id` = #{id};
+    </select>
+</mapper>

@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
 
     @RequestMapping(value = "/requestTest",method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> requestTest() throws JsonProcessingException {
+    public ResponseEntity<?> requestTest() throws JsonProcessingException, InterruptedException {
 
         JSONObject response = new JSONObject();
         response.put("result", "requestTest");
@@ -29,4 +30,5 @@ public class TestController {
         HttpStatus status = HttpStatus.OK;
         return ResponseEntity.status(status).body(response);
     }
+
 }
