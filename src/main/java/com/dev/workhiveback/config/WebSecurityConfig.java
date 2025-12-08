@@ -41,7 +41,13 @@ public class WebSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))//세션 사용 안함 (jwt 기반 인증)
                 .authorizeHttpRequests(auth ->
                         auth
-                                .requestMatchers("/user/login", "/user/register", "/","/test/requestTest").permitAll()
+                                .requestMatchers("/user/login",
+                                        "/user/register",
+                                        "/",
+                                        "/test/requestTest",
+                                        "/user/state-list",     //임시(삭제 예정)
+                                        "user/team-list"        //임시(삭제 예정)
+                                ).permitAll()
                                 .anyRequest().authenticated()
                 )
                 //jwt 필터를 usernamePasswordAuthenticationFilter 이후에 실행되도록 추가

@@ -2,6 +2,7 @@ package com.dev.workhiveback.controllers;
 
 import com.dev.workhiveback.dtos.LoginDto;
 import com.dev.workhiveback.results.CommonResult;
+import com.dev.workhiveback.results.reasons.CodeResult;
 import com.dev.workhiveback.results.reasons.LoginResult;
 import com.dev.workhiveback.results.reasons.RegisterResult;
 import com.dev.workhiveback.services.UserServices;
@@ -28,6 +29,20 @@ public class UserController {
             @RequestParam String password
     ) {
         RegisterResult result = userServices.register(id, password);
+        return ResponseEntity.ok(CommonResult.success(result));
+    }
+
+
+    @GetMapping(value = "/team-list")
+    public ResponseEntity<CommonResult<CodeResult>> getTeamList() {
+        CodeResult result = userServices.getTeamCodes();
+        System.out.println("team-list: " + result);
+        return ResponseEntity.ok(CommonResult.success(result));
+    }
+
+    @GetMapping(value = "/state-list")
+    public ResponseEntity<CommonResult<CodeResult>> getUserStateList() {
+        CodeResult result = userServices.getUserStateCodes();
         return ResponseEntity.ok(CommonResult.success(result));
     }
 }

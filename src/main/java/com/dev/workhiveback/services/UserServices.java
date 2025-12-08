@@ -2,13 +2,11 @@ package com.dev.workhiveback.services;
 
 import com.dev.workhiveback.dtos.LoginDto;
 import com.dev.workhiveback.dtos.UserDto;
+import com.dev.workhiveback.entities.CodeEntity;
 import com.dev.workhiveback.exceptions.LoginException;
 import com.dev.workhiveback.exceptions.RegisterException;
 import com.dev.workhiveback.mappers.UserMapper;
-import com.dev.workhiveback.results.reasons.LoginFailReason;
-import com.dev.workhiveback.results.reasons.LoginResult;
-import com.dev.workhiveback.results.reasons.RegisterFailReason;
-import com.dev.workhiveback.results.reasons.RegisterResult;
+import com.dev.workhiveback.results.reasons.*;
 import com.dev.workhiveback.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
 
@@ -17,6 +15,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -61,5 +61,17 @@ public class UserServices {
         String empId = (String) authentication.getPrincipal();
         return userMapper.selectById(empId)
                 .orElseThrow(() -> new LoginException(LoginFailReason.USER_NOT_FOUND, "사용자를 찾을수 없습니다."));
+    }
+
+    public CodeResult getTeamCodes(){
+        List<CodeEntity> teamCodes = userMapper.selectTeamCodes();
+        boolean result = teamCodes.isEmpty();
+        return new CodeResult(result, teamCodes);
+    }
+
+    public CodeResult getUserStateCodes(){
+        List<CodeEntity> userStateCodes = userMapper.selectUserStateCodes();
+        boolean result = userStateCodes.isEmpty();
+        return new CodeResult(result, userStateCodes);
     }
 }

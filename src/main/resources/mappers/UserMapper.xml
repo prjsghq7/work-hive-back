@@ -11,4 +11,16 @@
         from `wh`.`users`
         where `id` = #{id};
     </select>
+
+    <select id="selectTeamCodes" resultType="com.dev.workhiveback.entities.CodeEntity">
+        SELECT `code`        as 'code',
+               `display_text` as 'displayText'
+        FROM `wh`.`teams`
+    </select>
+
+    <select id="selectUserStateCodes" resultType="com.dev.workhiveback.entities.CodeEntity">
+        SELECT `code`        as 'code',
+               `display_text` as 'displayText'
+        FROM `wh`.`user_states`
+    </select>
 </mapper>
