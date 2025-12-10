@@ -2,11 +2,13 @@ package com.dev.workhiveback.services;
 
 import com.dev.workhiveback.dtos.LoginDto;
 import com.dev.workhiveback.dtos.UserDto;
+import com.dev.workhiveback.dtos.user.UserSearchDto;
 import com.dev.workhiveback.entities.CodeEntity;
 import com.dev.workhiveback.exceptions.LoginException;
 import com.dev.workhiveback.exceptions.RegisterException;
 import com.dev.workhiveback.mappers.UserMapper;
 import com.dev.workhiveback.results.reasons.*;
+import com.dev.workhiveback.results.reasons.user.SearchResult;
 import com.dev.workhiveback.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
 
@@ -61,6 +63,11 @@ public class UserServices {
         String empId = (String) authentication.getPrincipal();
         return userMapper.selectById(empId)
                 .orElseThrow(() -> new LoginException(LoginFailReason.USER_NOT_FOUND, "사용자를 찾을수 없습니다."));
+    }
+
+    public SearchResult search(String name, int teamCode, int userState) {
+        List<UserSearchDto> userList = userMapper.searchWithFilter(name, teamCode, userState);
+        return new SearchResult(userList);
     }
 
     public CodeResult getTeamCodes(){

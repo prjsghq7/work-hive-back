@@ -9,7 +9,7 @@ public class RegisterException extends RuntimeException {
 
     private final RegisterFailReason reason;
 
-    public RegisterException(RegisterFailReason reason,String message ) {
+    public RegisterException(RegisterFailReason reason,String message) {
         super(message);
         this.reason = reason;
     }

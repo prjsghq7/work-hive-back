@@ -12,6 +12,33 @@
         where `id` = #{id};
     </select>
 
+    <select id="searchWithFilter" resultType="com.dev.workhiveback.dtos.user.UserSearchDto">
+        SELECT `u`.`index` AS 'index',
+               `u`.`emp_id` AS 'empId',
+               `u`.`name` AS 'name',
+               `t`.`display_text` AS 'teamName',
+               `r`.`display_text` AS 'roleName',
+               `u`.`email` AS 'email',
+               `s`.`display_text` AS 'userStateName'
+        FROM `wh`.`users` AS `u`
+        LEFT JOIN `wh`.`teams` AS `t` ON `u`.`team_code` = `t`.`code`
+        LEFT JOIN `wh`.`roles` AS `r` ON `u`.`role_code` = `r`.`code`
+        LEFT JOIN `wh`.`user_states` AS `s` ON `u`.`user_state` = `s`.`code`
+        <where>
+            <if test="name != null and name != ''">
+                AND u.name LIKE CONCAT('%', #{name}, '%')
+            </if>
+
+            <if test="teamCode != 0">
+                AND u.team_code = #{teamCode}
+            </if>
+
+            <if test="userState != 0">
+                AND u.user_state = #{userState}
+            </if>
+        </where>
+    </select>
+
     <select id="selectTeamCodes" resultType="com.dev.workhiveback.entities.CodeEntity">
         SELECT `code`        as 'code',
                `display_text` as 'displayText'

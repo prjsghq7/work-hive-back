@@ -45,8 +45,9 @@ public class WebSecurityConfig {
                                         "/user/register",
                                         "/",
                                         "/test/requestTest",
+                                        "/user/search",     //임시(삭제 예정)
                                         "/user/state-list",     //임시(삭제 예정)
-                                        "user/team-list"        //임시(삭제 예정)
+                                        "/user/team-list"        //임시(삭제 예정)
                                 ).permitAll()
                                 .anyRequest().authenticated()
                 )
