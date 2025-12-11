@@ -13,6 +13,6 @@ public class LeaveService {
     }
 
     public CalendarDto[] getCalendarData(/*UserEntity signedUser*/) {
-        return this.leaveMapper.selectCalendarData(/*signedUser.getIndex()*/1);
+        return this.leaveMapper.selectCalendarData(/*signedUser.getIndex()*/900); // 임시로 900 넣어둠
     }
 }

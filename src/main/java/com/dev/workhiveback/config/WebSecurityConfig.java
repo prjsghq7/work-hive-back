@@ -47,7 +47,8 @@ public class WebSecurityConfig {
                                         "/test/requestTest",
                                         "/user/search",     //임시(삭제 예정)
                                         "/user/state-list",     //임시(삭제 예정)
-                                        "/user/team-list"        //임시(삭제 예정)
+                                        "/user/team-list",        //임시(삭제 예정)
+                                        "/leave/**"             //임시: 캘린더 테스트
                                 ).permitAll()
                                 .anyRequest().authenticated()
                 )
