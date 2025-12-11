@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dev.workhiveback.mappers.BoardMapper">
+
+    <insert id="insertBoard">
+        insert into `wh`.`boards` (emp_id, type, title, content, view, created_at, is_deleted)
+        values (#{empId}, #{type}, #{title}, #{content}, 0, now(), false)
+    </insert>
+
+    <select id="selectBoards" resultType="com.dev.workhiveback.entities.BoardEntity">
+        SELECT `b`.index,
+               `b`.emp_id     as empId,
+               `b`.type,
+               `b`.title,
+               `b`.content,
+               `b`.view,
+               `b`.created_at as createdAt
+        FROM `wh`.`boards` `b`
+        ORDER BY b.index desc
+    </select>
+
+    <select id="findById" resultType="com.dev.workhiveback.entities.BoardEntity">
+        SELECT
+            `index` as `index`,
+            `emp_id` as `empId`,
+            `type` as `type`,
+            `title` as `title`,
+            `content` as `content`,
+            `view` as `view`,
+            `created_at` as `createdAt`,
+            `updated_at` as `updatedAt`,
+            `is_deleted` as `isDeleted`
+        FROM `wh`.`boards`
+        WHERE `index` = #{id}
+    </select>
+
+</mapper>
