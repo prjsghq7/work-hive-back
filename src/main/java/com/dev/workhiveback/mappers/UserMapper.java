@@ -3,6 +3,8 @@ package com.dev.workhiveback.mappers;
 import com.dev.workhiveback.dtos.LoginDto;
 import com.dev.workhiveback.dtos.user.UserSearchDto;
 import com.dev.workhiveback.entities.CodeEntity;
+import com.dev.workhiveback.dtos.UserDto;
+import com.dev.workhiveback.entities.UserEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.data.repository.query.Param;
 
@@ -12,7 +14,7 @@ import java.util.Optional;
 @Mapper
 public interface UserMapper {
 
-    Optional<LoginDto> selectById(String id);
+    Optional<UserDto> selectById(String emp_id);
 
     int register(@Param(value = "id") String id,@Param(value = "password") String password);
 
@@ -23,4 +25,8 @@ public interface UserMapper {
     List<CodeEntity> selectTeamCodes();
 
     List<CodeEntity> selectUserStateCodes();
+    int register(UserEntity user);
+
+    //todo 추우에 mapper.xml에 추가해야한다.
+    Optional<UserEntity> selectByEmpId(String emp_id);
 }

@@ -1,14 +1,17 @@
 package com.dev.workhiveback.security;
 
+import com.dev.workhiveback.dtos.UserDto;
+import com.dev.workhiveback.entities.UserEntity;
+import com.dev.workhiveback.mappers.UserMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +21,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -26,6 +30,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     //OncePerRequestFilter 를 상속하면 http 요청당 한번만 실행되는 필터를 만들수 있다.
     private final TokenProvider tokenProvider;
+    private final UserMapper userMapper;
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
@@ -45,11 +50,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             //토큰이 존재하고 null이 아닌 경우
             if (token != null && !token.equalsIgnoreCase("null")) {
                 String empId = tokenProvider.validateAndGetUserEmpId(token);
-                log.info("user empId: "+ empId);
+                log.info("user empId: " + empId);
 
-                //사용자 iD를 기반으로 인증 객체 생성(권한 없음)
-                //jwt에는 권한 정보는 보통 들어가지 않는다.
-                AbstractAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(empId, null, AuthorityUtils.NO_AUTHORITIES);
+                UserEntity user = userMapper.selectByEmpId(empId)
+                        .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
+                List<GrantedAuthority> authorities;
+                if (user.getTeam_code() == 101 || user.getRole_code() == 1) {
+                    authorities = AuthorityUtils.createAuthorityList("ROLE_ADMIN");
+                } else {
+                    authorities = AuthorityUtils.createAuthorityList("ROLE_USER");
+                }
+
+                AbstractAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(user, null, authorities);
+// 🔺 여기 principal = user (UserEntity)
 
                 //요청 정보 추가(IP,세션 등)
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

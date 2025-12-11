@@ -1,15 +1,57 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dev.workhiveback.mappers.UserMapper">
-    <insert id="register">
-        insert into `wh`.`users`(id, password) VALUES (#{id},#{password})
-    </insert>
+    <insert id="register"
+            parameterType="com.dev.workhiveback.entities.UserEntity"
+            useGeneratedKeys="true"
+            keyProperty="index"
+            keyColumn="index">
 
-    <select id="selectById" resultType="com.dev.workhiveback.dtos.LoginDto">
-        select `id`       as 'id',
-               `password` as 'password'
+        INSERT INTO `wh`.`users`
+        (`emp_id`, `user_state`, `name`, `phone_number`, `birth`, `start_date`, `email`,
+         `password`, `total_day_offs`, `remaining_day_offs`)
+        VALUES (#{emp_id},
+                #{user_state},
+                #{name},
+                #{phoneNumber},
+                #{birth},
+                #{start_date},
+                #{email},
+                #{password},
+                #{total_day_offs},
+                #{remaining_day_offs});
+    </insert>
+    <select id="selectById" resultType="com.dev.workhiveback.dtos.UserDto">
+        select `emp_id`,
+               `password`,
+               `team_code`,
+               `role_code`,
+               `name`,
+               `phone_number`,
+               `birth`,
+               `start_date`,
+               `total_day_offs`,
+               `remaining_day_offs`
         from `wh`.`users`
-        where `id` = #{id};
+        where `emp_id`=#{emp_id};
+    </select>
+    <select id="selectByEmpId" resultType="com.dev.workhiveback.entities.UserEntity">
+        select `index`,
+               `emp_id`,
+               `team_code`,
+               `role_code`,
+               `user_state`,
+               `name`,
+               `phone_number` as 'phoneNumber',
+               `birth`,
+               `start_date`,
+               `email`,
+               `password`,
+               `total_day_offs`,
+               `remaining_day_offs`
+        from `wh`.users
+        where `emp_id` = #{emp_id};
+
     </select>
 
     <select id="searchWithFilter" resultType="com.dev.workhiveback.dtos.user.UserSearchDto">
@@ -50,4 +92,5 @@
                `display_text` as 'displayText'
         FROM `wh`.`user_states`
     </select>
+
 </mapper>

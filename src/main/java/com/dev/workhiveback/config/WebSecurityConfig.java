@@ -4,6 +4,7 @@ import com.dev.workhiveback.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -20,6 +21,7 @@ import java.util.List;
 
 @Configuration//이 클래스가 스프링 설정 클래스임을 의미
 @EnableWebSecurity//Spring Security 활성화
+@EnableMethodSecurity//이걸 추가해야 컨트롤러에서 @PreAuthorize 같은 걸 쓸 수 있다.
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
@@ -50,10 +52,11 @@ public class WebSecurityConfig {
                                         "/user/team-list",        //임시(삭제 예정)
                                         "/leave/**"             //임시: 캘린더 테스트
                                 ).permitAll()
+                                .requestMatchers("/user/login", "/user/register", "/").permitAll()
                                 .anyRequest().authenticated()
                 )
                 //jwt 필터를 usernamePasswordAuthenticationFilter 이후에 실행되도록 추가
-                .addFilterAfter(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exception -> exception
                         //인증 실패시 403 forbidden 반환
                         .authenticationEntryPoint(new Http403ForbiddenEntryPoint(

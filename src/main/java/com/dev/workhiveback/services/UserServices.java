@@ -4,6 +4,7 @@ import com.dev.workhiveback.dtos.LoginDto;
 import com.dev.workhiveback.dtos.UserDto;
 import com.dev.workhiveback.dtos.user.UserSearchDto;
 import com.dev.workhiveback.entities.CodeEntity;
+import com.dev.workhiveback.entities.UserEntity;
 import com.dev.workhiveback.exceptions.LoginException;
 import com.dev.workhiveback.exceptions.RegisterException;
 import com.dev.workhiveback.mappers.UserMapper;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
+import java.time.LocalDate;
+
 @Service
 @RequiredArgsConstructor
 public class UserServices {
@@ -28,9 +31,11 @@ public class UserServices {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
 
+    private static final int DEFAULT_ROLE_CODE =999;
+
     public LoginResult login(LoginDto request) {
 
-        LoginDto user = this.userMapper.selectById(request.getId())
+        UserDto user = this.userMapper.selectById(request.getEmp_id())
                 .orElseThrow(() -> new LoginException(LoginFailReason.USER_NOT_FOUND, "사용자를 찾을수 없습니다."));
         //orElseThrow()가 되는 이유 mapper에서 Optional로 받기 때문에 -> Optional은 데이터가 없을때 Option.empty()상태에서 .orElseThrow()를 호출하면 전달한 예외가 발생한다.
         //OPtional은 내부적으로 값이 있으면 꺼내고, 값이 없으면 에러를 던지는 메서드를 제공.
@@ -38,27 +43,48 @@ public class UserServices {
         if (!matches) {
             throw new LoginException(LoginFailReason.WRONG_PASSWORD, "비밀번호가 틀립니다.");
         }
-        String token = tokenProvider.createByEmpId(request.getId());
+        String token = tokenProvider.createByEmpId(request.getEmp_id());
         System.out.println("로그인 성공");
-        return new LoginResult(user.getId(),token);
+        return new LoginResult(user.getEmp_id(), token);
     }
 
-    public RegisterResult register(String id, String password) {
-        if (id == null || password == null) {
-            throw new RegisterException(RegisterFailReason.NOT_ENOUGH_INFO, "아이디,이름 혹은 비밀번호를 입력하지 않음.");
+    public RegisterResult register(UserEntity user) {
+        if (user == null) {
+            throw new RegisterException(RegisterFailReason.FAIL, "다시 시도해주세요.");
         }
 
-        String encodedPassword = passwordEncoder.encode(password);
+        if (user.getName() == null || user.getName().isBlank()) {
+            throw new RegisterException(RegisterFailReason.NOT_ENOUGH_INFO, "이름 정보가 충분하지 않습니다.");
+        }
 
-        int result = this.userMapper.register(id, encodedPassword);
+        if (user.getPassword() == null || user.getPassword().isBlank()) {
+            throw new RegisterException(RegisterFailReason.NOT_ENOUGH_INFO, "비밀번호 정보가 충분하지 않습니다.");
+        }
+
+        if (user.getBirth() == null) {
+            throw new RegisterException(RegisterFailReason.NOT_ENOUGH_INFO, "생일 정보가 충분하지 않습니다.");
+        }
+
+        if (user.getEmail() == null || user.getEmail().isBlank()) {
+            throw new RegisterException(RegisterFailReason.NOT_ENOUGH_INFO, "이메일 정보가 충분하지 않습니다.");
+        }
+
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
+        user.setStart_date(LocalDate.now());
+        user.setRole_code(DEFAULT_ROLE_CODE);
+        user.setUser_state(1);
+        user.setRemaining_day_offs(0);
+        user.setTotal_day_offs(0);
+        int result = this.userMapper.register(user);
 
         if (result <= 0) {
-            throw new RegisterException(RegisterFailReason.FAIL, "회원가입 실패");
+            throw new RegisterException(RegisterFailReason.REGISTER_FAIL, "회원가입 실패");
         }
         return RegisterResult.success();
     }
 
-    public LoginDto getMyProfile(){
+    public UserDto getMyProfile(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String empId = (String) authentication.getPrincipal();
         return userMapper.selectById(empId)
@@ -81,4 +107,10 @@ public class UserServices {
         boolean result = userStateCodes.isEmpty();
         return new CodeResult(result, userStateCodes);
     }
+//    public LoginDto getMyProfile() {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String empId = (String) authentication.getPrincipal();
+//        return userMapper.selectById(empId)
+//                .orElseThrow(() -> new LoginException(LoginFailReason.USER_NOT_FOUND, "사용자를 찾을수 없습니다."));
+//    }
 }
