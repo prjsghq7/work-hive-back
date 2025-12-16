@@ -32,7 +32,7 @@ public class TokenProvider {
         //jwt 생성 및 반환
         return Jwts.builder()
                 .signWith(SIGNING_KEY, SignatureAlgorithm.HS512)//서명 알고리즘과 키 설정
-                .setSubject(String.valueOf(userEntity.getEmp_id()))//사원 번호를 subject로 설정 -> 이 토큰이 누구를 위한 것인지
+                .setSubject(String.valueOf(userEntity.getEmpId()))//사원 번호를 subject로 설정 -> 이 토큰이 누구를 위한 것인지
                 .setIssuer("Work Hive")//토큰 발급자 정보 설정
                 .setIssuedAt(new Date())//토큰 발급 시간 설정
                 .setExpiration(expireDate)//만료 기간 설정

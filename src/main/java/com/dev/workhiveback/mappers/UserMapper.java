@@ -14,7 +14,7 @@ import java.util.Optional;
 @Mapper
 public interface UserMapper {
 
-    Optional<UserDto> selectById(String emp_id);
+    Optional<UserDto> selectById(String empId);
 
     int register(@Param(value = "id") String id,@Param(value = "password") String password);
 
@@ -27,6 +27,5 @@ public interface UserMapper {
     List<CodeEntity> selectUserStateCodes();
     int register(UserEntity user);
 
-    //todo 추우에 mapper.xml에 추가해야한다.
-    Optional<UserEntity> selectByEmpId(String emp_id);
+    Optional<UserEntity> selectByEmpId(String empId);
 }

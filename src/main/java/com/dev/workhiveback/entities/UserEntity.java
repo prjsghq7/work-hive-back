@@ -11,18 +11,18 @@ import java.time.LocalDate;
 @EqualsAndHashCode(of = "index")
 public class UserEntity {
     int index;
-    int emp_id;
-    int team_code;
-    int role_code;
-    int user_state;
+    int empId;
+    int teamCode;
+    int roleCode;
+    int userState;
 
     String name;
     String phoneNumber;
     LocalDate birth;
-    LocalDate start_date;
+    LocalDate startDate;
     String email;
     String password;
-    float total_day_offs;
-    float remaining_day_offs;
+    float totalDayOffs;
+    float remainingDayOffs;
     String picture;
 }

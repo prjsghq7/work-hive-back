@@ -35,7 +35,7 @@ public class UserServices {
 
     public LoginResult login(LoginDto request) {
 
-        UserDto user = this.userMapper.selectById(request.getEmp_id())
+        UserDto user = this.userMapper.selectById(request.getEmpId())
                 .orElseThrow(() -> new LoginException(LoginFailReason.USER_NOT_FOUND, "사용자를 찾을수 없습니다."));
         //orElseThrow()가 되는 이유 mapper에서 Optional로 받기 때문에 -> Optional은 데이터가 없을때 Option.empty()상태에서 .orElseThrow()를 호출하면 전달한 예외가 발생한다.
         //OPtional은 내부적으로 값이 있으면 꺼내고, 값이 없으면 에러를 던지는 메서드를 제공.
@@ -43,9 +43,9 @@ public class UserServices {
         if (!matches) {
             throw new LoginException(LoginFailReason.WRONG_PASSWORD, "비밀번호가 틀립니다.");
         }
-        String token = tokenProvider.createByEmpId(request.getEmp_id());
+        String token = tokenProvider.createByEmpId(request.getEmpId());
         System.out.println("로그인 성공");
-        return new LoginResult(user.getEmp_id(), token);
+        return new LoginResult(user.getEmpId(), token);
     }
 
     public RegisterResult register(UserEntity user) {
@@ -54,6 +54,10 @@ public class UserServices {
         }
 
         if (user.getName() == null || user.getName().isBlank()) {
+            throw new RegisterException(RegisterFailReason.NOT_ENOUGH_INFO, "이름 정보가 충분하지 않습니다.");
+        }
+
+        if (user.getPhoneNumber() == null || user.getPhoneNumber().isBlank()) {
             throw new RegisterException(RegisterFailReason.NOT_ENOUGH_INFO, "이름 정보가 충분하지 않습니다.");
         }
 
@@ -71,11 +75,11 @@ public class UserServices {
 
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
-        user.setStart_date(LocalDate.now());
-        user.setRole_code(DEFAULT_ROLE_CODE);
-        user.setUser_state(1);
-        user.setRemaining_day_offs(0);
-        user.setTotal_day_offs(0);
+        user.setStartDate(LocalDate.now());
+        user.setRoleCode(DEFAULT_ROLE_CODE);
+        user.setUserState(1);
+        user.setRemainingDayOffs(0);
+        user.setTotalDayOffs(0);
         int result = this.userMapper.register(user);
 
         if (result <= 0) {
@@ -83,13 +87,13 @@ public class UserServices {
         }
         return RegisterResult.success();
     }
-
-    public UserDto getMyProfile(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String empId = (String) authentication.getPrincipal();
-        return userMapper.selectById(empId)
-                .orElseThrow(() -> new LoginException(LoginFailReason.USER_NOT_FOUND, "사용자를 찾을수 없습니다."));
-    }
+//
+//    public UserDto getMyProfile(){
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String empId = (String) authentication.getPrincipal();
+//        return userMapper.selectById(empId)
+//                .orElseThrow(() -> new LoginException(LoginFailReason.USER_NOT_FOUND, "사용자를 찾을수 없습니다."));
+//    }
 
     public SearchResult search(String name, int teamCode, int userState) {
         List<UserSearchDto> userList = userMapper.searchWithFilter(name, teamCode, userState);
@@ -107,10 +111,5 @@ public class UserServices {
         boolean result = userStateCodes.isEmpty();
         return new CodeResult(result, userStateCodes);
     }
-//    public LoginDto getMyProfile() {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        String empId = (String) authentication.getPrincipal();
-//        return userMapper.selectById(empId)
-//                .orElseThrow(() -> new LoginException(LoginFailReason.USER_NOT_FOUND, "사용자를 찾을수 없습니다."));
-//    }
+
 }

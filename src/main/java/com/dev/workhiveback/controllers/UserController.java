@@ -10,11 +10,13 @@ import com.dev.workhiveback.results.reasons.LoginResult;
 import com.dev.workhiveback.results.reasons.RegisterResult;
 import com.dev.workhiveback.services.UserServices;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/user")

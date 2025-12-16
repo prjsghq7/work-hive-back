@@ -56,7 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
                 List<GrantedAuthority> authorities;
-                if (user.getTeam_code() == 101 || user.getRole_code() == 1) {
+                if (user.getTeamCode() == 101 || user.getRoleCode() == 1) {
                     authorities = AuthorityUtils.createAuthorityList("ROLE_ADMIN");
                 } else {
                     authorities = AuthorityUtils.createAuthorityList("ROLE_USER");

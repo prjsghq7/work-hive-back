@@ -6,14 +6,14 @@ import java.time.LocalDate;
 
 @Getter
 public class UserDto {
-    private String emp_id;
+    private String empId;
     private String password;
-    private int team_code;
-    private int role_code;
+    private int teamCode;
+    private int roleCode;
     private String name;
-    private String phone_number;
+    private String phoneNumber;
     private LocalDate birth;
-    private LocalDate start_date;
-    private double total_day_offs;
-    private double remaining_day_offs;
+    private LocalDate startDate;
+    private double totalDayOffs;
+    private double remainingDayOffs;
 }

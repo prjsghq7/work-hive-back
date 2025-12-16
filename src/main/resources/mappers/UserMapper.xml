@@ -22,35 +22,35 @@
                 #{remaining_day_offs});
     </insert>
     <select id="selectById" resultType="com.dev.workhiveback.dtos.UserDto">
-        select `emp_id`,
+        select `emp_id` as 'empId',
                `password`,
-               `team_code`,
-               `role_code`,
-               `name`,
-               `phone_number`,
-               `birth`,
-               `start_date`,
-               `total_day_offs`,
-               `remaining_day_offs`
-        from `wh`.`users`
-        where `emp_id`=#{emp_id};
-    </select>
-    <select id="selectByEmpId" resultType="com.dev.workhiveback.entities.UserEntity">
-        select `index`,
-               `emp_id`,
-               `team_code`,
-               `role_code`,
-               `user_state`,
+               `team_code` as 'teamCode',
+               `role_code` as 'roleCode',
                `name`,
                `phone_number` as 'phoneNumber',
                `birth`,
-               `start_date`,
+               `start_date` as 'startDate',
+               `total_day_offs` as 'totalDayOffs',
+               `remaining_day_offs` as 'remainingDayOffs'
+        from `wh`.`users`
+        where `emp_id`=#{empId};
+    </select>
+    <select id="selectByEmpId" resultType="com.dev.workhiveback.entities.UserEntity">
+        select `index`,
+               `emp_id` as 'empId',
+               `team_code` as 'teamCode',
+               `role_code` as 'roleCode',
+               `user_state` as 'userState',
+               `name`,
+               `phone_number` as 'phoneNumber',
+               `birth`,
+               `start_date` as 'startDate',
                `email`,
                `password`,
-               `total_day_offs`,
-               `remaining_day_offs`
+               `total_day_offs` as 'totalDayOffs',
+               `remaining_day_offs` as 'remainingDayOffs'
         from `wh`.users
-        where `emp_id` = #{emp_id};
+        where `emp_id` = #{empId};
 
     </select>
 
