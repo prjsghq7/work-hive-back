@@ -2,13 +2,17 @@ package com.dev.workhiveback.services;
 
 import com.dev.workhiveback.dtos.LoginDto;
 import com.dev.workhiveback.dtos.UserDto;
+import com.dev.workhiveback.dtos.user.UserEditDto;
 import com.dev.workhiveback.dtos.user.UserSearchDto;
 import com.dev.workhiveback.entities.CodeEntity;
 import com.dev.workhiveback.entities.UserEntity;
 import com.dev.workhiveback.exceptions.LoginException;
 import com.dev.workhiveback.exceptions.RegisterException;
+import com.dev.workhiveback.exceptions.user.EditException;
 import com.dev.workhiveback.mappers.UserMapper;
 import com.dev.workhiveback.results.reasons.*;
+import com.dev.workhiveback.results.reasons.user.EditFailReason;
+import com.dev.workhiveback.results.reasons.user.EditResult;
 import com.dev.workhiveback.results.reasons.user.SearchResult;
 import com.dev.workhiveback.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -112,4 +116,54 @@ public class UserServices {
         return new CodeResult(result, userStateCodes);
     }
 
+    public CodeResult getRoleCodes(){
+        List<CodeEntity> userStateCodes = userMapper.selectRoleCodes();
+        boolean result = userStateCodes.isEmpty();
+        return new CodeResult(result, userStateCodes);
+    }
+
+    public UserEditDto getUserByIndex(int index) {
+        return userMapper.selectUserForEdit(index);
+    }
+
+    public EditResult updateUser(UserEditDto user) {
+        UserEntity dbUser = this.userMapper.selectByIndex(user.getIndex())
+                .orElseThrow(() -> new EditException(EditFailReason.NOT_FOUND, "사용자를 찾을수 없습니다."));
+
+        if (this.userMapper.selectCountByEmpId(user.getEmpId()) > 0) {
+            throw new EditException(
+                    EditFailReason.DUPLICATE_EMP_ID,
+                    "중복된 사번 입니다."
+            );
+        }
+        if (this.userMapper.selectCountByEmail(user.getEmail()) > 0) {
+            throw new EditException(
+                    EditFailReason.DUPLICATE_EMAIL,
+                    "중복된 이메일 입니다."
+            );
+        }
+        if (this.userMapper.selectCountByPhoneNumber(user.getPhoneNumber()) > 0) {
+            throw new EditException(
+                    EditFailReason.DUPLICATE_PHONE,
+                    "중복된 전화번호 입니다."
+            );
+        }
+        dbUser.setName(user.getName());
+        dbUser.setTeamCode(user.getTeamCode());
+        dbUser.setRoleCode(user.getRoleCode());
+        dbUser.setUserState(user.getUserState());
+        dbUser.setEmail(user.getEmail());
+        dbUser.setPhoneNumber(user.getPhoneNumber());
+        dbUser.setTotalDayOffs(user.getTotalDayOffs());
+
+        int result = this.userMapper.register(dbUser);
+
+        if (result <= 0) {
+            throw new EditException(
+                    EditFailReason.EDIT_FAILED,
+                    "수정에 실패 하였습니다."
+            );
+        }
+        return EditResult.success();
+    }
 }

@@ -2,8 +2,10 @@ package com.dev.workhiveback.controllers;
 
 import com.dev.workhiveback.dtos.LoginDto;
 import com.dev.workhiveback.dtos.UserDto;
+import com.dev.workhiveback.dtos.user.UserEditDto;
 import com.dev.workhiveback.entities.UserEntity;
 import com.dev.workhiveback.results.CommonResult;
+import com.dev.workhiveback.results.reasons.user.EditResult;
 import com.dev.workhiveback.results.reasons.user.SearchResult;
 import com.dev.workhiveback.results.reasons.CodeResult;
 import com.dev.workhiveback.results.reasons.LoginResult;
@@ -42,9 +44,6 @@ public class UserController {
             @RequestParam(defaultValue = "0") int teamCode,
             @RequestParam(defaultValue = "0") int userState) {
         SearchResult result = userServices.search(name, teamCode, userState);
-        result.getUserList().forEach(user -> {
-            System.out.println(user.getName());
-        });
         return ResponseEntity.ok(CommonResult.success(result));
     }
 
@@ -57,6 +56,24 @@ public class UserController {
     @GetMapping(value = "/state-list")
     public ResponseEntity<CommonResult<CodeResult>> getUserStateList() {
         CodeResult result = userServices.getUserStateCodes();
+        return ResponseEntity.ok(CommonResult.success(result));
+    }
+
+    @GetMapping(value = "/role-list")
+    public ResponseEntity<CommonResult<CodeResult>> getRoleList() {
+        CodeResult result = userServices.getRoleCodes();
+        return ResponseEntity.ok(CommonResult.success(result));
+    }
+
+    @GetMapping(value = "/info")
+    public ResponseEntity<CommonResult<UserEditDto>> getUser(@RequestParam int index) {
+        UserEditDto user = userServices.getUserByIndex(index);
+        return ResponseEntity.ok(CommonResult.success(user));
+    }
+
+    @PatchMapping("/info")
+    public ResponseEntity<CommonResult<EditResult>> patchUser(@RequestBody UserEditDto user) {
+        EditResult result = userServices.updateUser(user);
         return ResponseEntity.ok(CommonResult.success(result));
     }
 

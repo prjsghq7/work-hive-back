@@ -1,6 +1,62 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dev.workhiveback.mappers.UserMapper">
+    <update id="update">
+        UPDATE `wh`.`users`
+        SET
+            `emp_id` = #{user.empId},
+            `team_code` = #{user.teamCode},
+            `role_code` = #{user.roleCode},
+            `user_state` = #{user.userState},
+            `name` = #{user.name},
+            `phone_number` = #{user.phoneNumber},
+            `birth` = #{user.birth},
+            `start_date` = #{user.startDate},
+            `email` = #{user.email},
+            `password` = #{user.password},
+            `total_day_offs` = #{user.totalDayOffs},
+            `remaining_day_offs` = #{user.remainingDayOffs}
+        WHERE `index` = #{user.index}
+        LIMIT 1
+    </update>
+
+
+    <select id="selectCountByEmpId" resultType="java.lang.Integer">
+        SELECT 0
+        FROM `wh`.`users`
+        WHERE `emp_id` = #{empId}
+    </select>
+
+
+    <select id="selectCountByEmail" resultType="java.lang.Integer">
+        SELECT 0
+        FROM `wh`.`users`
+        WHERE `email` = #{email}
+    </select>
+
+    <select id="selectCountByPhoneNumber" resultType="java.lang.Integer">
+        SELECT 0
+        FROM `wh`.`users`
+        WHERE `phone_number` = #{phoneNumber}
+    </select>
+
+    <select id="selectByIndex" resultType="com.dev.workhiveback.entities.UserEntity">
+        SELECT `index`,
+               `emp_id`,
+               `team_code`,
+               `role_code`,
+               `user_state`,
+               `name`,
+               `phone_number`,
+               `birth`,
+               `start_date`,
+               `email`,
+               `password`,
+               `total_day_offs`,
+               `remaining_day_offs`
+        FROM `wh`.`users`
+    </select>
+
     <insert id="register"
             parameterType="com.dev.workhiveback.entities.UserEntity"
             useGeneratedKeys="true"
@@ -91,6 +147,26 @@
         SELECT `code`        as 'code',
                `display_text` as 'displayText'
         FROM `wh`.`user_states`
+    </select>
+
+    <select id="selectRoleCodes" resultType="com.dev.workhiveback.entities.CodeEntity">
+        SELECT `code`        as 'code',
+               `display_text` as 'displayText'
+        FROM `wh`.`roles`
+    </select>
+
+    <select id="selectUserForEdit" resultType="com.dev.workhiveback.dtos.user.UserEditDto">
+        SELECT `index`        AS 'index',
+               `emp_id`        AS 'empId',
+               `name`         AS 'name',
+               `team_code`     AS 'teamCode',
+               `role_code`     AS 'roleCode',
+               `user_state`    AS 'userState',
+               `email`        AS 'email',
+               `phone_number`  AS 'phoneNumber',
+               `total_day_offs` AS 'totalDayOffs'
+        FROM `wh`.`users`
+        WHERE `index` = #{index};
     </select>
 
 </mapper>

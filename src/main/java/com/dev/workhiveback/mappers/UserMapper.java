@@ -1,6 +1,7 @@
 package com.dev.workhiveback.mappers;
 
 import com.dev.workhiveback.dtos.LoginDto;
+import com.dev.workhiveback.dtos.user.UserEditDto;
 import com.dev.workhiveback.dtos.user.UserSearchDto;
 import com.dev.workhiveback.entities.CodeEntity;
 import com.dev.workhiveback.dtos.UserDto;
@@ -16,16 +17,32 @@ public interface UserMapper {
 
     Optional<UserDto> selectById(String empId);
 
+    Optional<UserEntity> selectByIndex(int index);
+
     int register(@Param(value = "id") String id,@Param(value = "password") String password);
 
     List<UserSearchDto> searchWithFilter(@Param(value = "name") String name,
                                          @Param(value = "teamCode") int teamCode,
                                          @Param(value = "userState") int userState);
 
+    int selectCountByEmpId(@Param(value = "empId") int empId);
+
+    int selectCountByEmail(@Param(value = "email") String email);
+
+    int selectCountByPhoneNumber(@Param(value = "phoneNumber") String phoneNumber);
+
+    int update(@Param(value = "user") UserEntity user);
+
     List<CodeEntity> selectTeamCodes();
 
     List<CodeEntity> selectUserStateCodes();
+
+    List<CodeEntity> selectRoleCodes();
+
+    UserEditDto selectUserForEdit(@Param(value = "index") int index);
+
     int register(UserEntity user);
 
-    Optional<UserEntity> selectByEmpId(String empId);
+    //todo 추우에 mapper.xml에 추가해야한다.
+    Optional<UserEntity> selectByEmpId(String emp_id);
 }
