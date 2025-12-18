@@ -19,8 +19,6 @@ public interface UserMapper {
 
     Optional<UserEntity> selectByIndex(int index);
 
-    int register(@Param(value = "id") String id,@Param(value = "password") String password);
-
     List<UserSearchDto> searchWithFilter(@Param(value = "name") String name,
                                          @Param(value = "teamCode") int teamCode,
                                          @Param(value = "userState") int userState);
@@ -43,6 +41,5 @@ public interface UserMapper {
 
     int register(UserEntity user);
 
-    //todo 추우에 mapper.xml에 추가해야한다.
     Optional<UserEntity> selectByEmpId(String emp_id);
 }

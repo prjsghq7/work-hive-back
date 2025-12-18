@@ -66,16 +66,16 @@
         INSERT INTO `wh`.`users`
         (`emp_id`, `user_state`, `name`, `phone_number`, `birth`, `start_date`, `email`,
          `password`, `total_day_offs`, `remaining_day_offs`)
-        VALUES (#{emp_id},
-                #{user_state},
+        VALUES (#{empId},
+                #{userState},
                 #{name},
                 #{phoneNumber},
                 #{birth},
-                #{start_date},
+                #{startDate},
                 #{email},
                 #{password},
-                #{total_day_offs},
-                #{remaining_day_offs});
+                #{totalDayOffs},
+                #{remainingDayOffs});
     </insert>
     <select id="selectById" resultType="com.dev.workhiveback.dtos.UserDto">
         select `emp_id` as 'empId',
