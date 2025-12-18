@@ -18,11 +18,19 @@ public class BoardService {
         boardMapper.insertBoard(dto);
     }
 
+    public BoardEntity findById(int id) {
+        return boardMapper.findById(id);
+    }
+
     public List<BoardEntity> findAll() {
         return boardMapper.selectBoards();
     }
 
-    public BoardEntity findById(int id) {
-        return boardMapper.findById(id);
+    public List<BoardEntity> NoticeAll() {
+        return boardMapper.selectNoticeBoards();
+    }
+
+    public List<BoardEntity> FamilyEventAll() {
+        return boardMapper.selectFamilyEventBoards();
     }
 }

@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/boards")
+@RequestMapping("/board")
 public class BoardController {
 
     private final BoardService boardService;
@@ -24,6 +24,16 @@ public class BoardController {
     @GetMapping
     public List<BoardEntity> getBoards() {
         return boardService.findAll();
+    }
+
+    @GetMapping("/notice")
+    public List<BoardEntity> getNoticeBoard() {
+        return boardService.NoticeAll();
+    }
+
+    @GetMapping("/family-event")
+    public List<BoardEntity> getFamilyEventBoard() {
+        return boardService.FamilyEventAll();
     }
 
     @GetMapping("/{id}")

@@ -9,31 +9,61 @@
         values (#{empId}, #{type}, #{title}, #{content}, 0, now(), false)
     </insert>
 
-    <select id="selectBoards" resultType="com.dev.workhiveback.entities.BoardEntity">
-        SELECT `b`.index,
-               `b`.emp_id     as empId,
-               `b`.type,
-               `b`.title,
-               `b`.content,
-               `b`.view,
-               `b`.created_at as createdAt
-        FROM `wh`.`boards` `b`
-        ORDER BY b.index desc
-    </select>
-
     <select id="findById" resultType="com.dev.workhiveback.entities.BoardEntity">
-        SELECT
-            `index` as `index`,
-            `emp_id` as `empId`,
-            `type` as `type`,
-            `title` as `title`,
-            `content` as `content`,
-            `view` as `view`,
-            `created_at` as `createdAt`,
-            `updated_at` as `updatedAt`,
-            `is_deleted` as `isDeleted`
+        SELECT `index`      as `index`,
+               `emp_id`     as `empId`,
+               `type`       as `type`,
+               `title`      as `title`,
+               `content`    as `content`,
+               `view`       as `view`,
+               `created_at` as `createdAt`,
+               `updated_at` as `updatedAt`,
+               `is_deleted` as `isDeleted`
         FROM `wh`.`boards`
         WHERE `index` = #{id}
+    </select>
+
+    <select id="selectBoards" resultType="com.dev.workhiveback.entities.BoardEntity">
+        SELECT `index`      as `index`,
+               `emp_id`     as `empId`,
+               `type`       as `type`,
+               `title`      as `title`,
+               `content`    as `content`,
+               `view`       as `view`,
+               `created_at` as `createdAt`
+        FROM `wh`.`boards`
+        where `is_deleted` = false
+        ORDER BY `index` desc
+    </select>
+    <select id="selectNoticeBoards" resultType="com.dev.workhiveback.entities.BoardEntity">
+        select `index`      as `index`,
+               `emp_id`     as `empId`,
+               `type`       as `type`,
+               `title`      as `title`,
+               `content`    as `content`,
+               `view`       as `view`,
+               `created_at` as `createdAt`,
+               `updated_at` as `updatedAt`,
+               `is_deleted` as `isDeleted`
+        from `wh`.`boards`
+        where `type` = 1
+          and `is_deleted` = false
+        order by `index` desc
+    </select>
+    <select id="selectFamilyEventBoards" resultType="com.dev.workhiveback.entities.BoardEntity">
+        select `index`      as `index`,
+               `emp_id`     as `empId`,
+               `type`       as `type`,
+               `title`      as `title`,
+               `content`    as `content`,
+               `view`       as `view`,
+               `created_at` as `createdAt`,
+               `updated_at` as `updatedAt`,
+               `is_deleted` as `isDeleted`
+        from `wh`.`boards`
+        where `type` = 2
+          and `is_deleted` = false
+        order by `index` desc
     </select>
 
 </mapper>

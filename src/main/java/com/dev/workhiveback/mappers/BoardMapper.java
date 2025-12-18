@@ -13,5 +13,9 @@ public interface BoardMapper {
 
     List<BoardEntity> selectBoards();
 
+    List<BoardEntity> selectNoticeBoards();
+
+    List<BoardEntity> selectFamilyEventBoards();
+
     BoardEntity findById(int id);
 }
