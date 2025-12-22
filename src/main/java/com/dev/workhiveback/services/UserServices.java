@@ -140,19 +140,19 @@ public class UserServices {
         UserEntity dbUser = this.userMapper.selectByIndex(user.getIndex())
                 .orElseThrow(() -> new EditException(EditFailReason.NOT_FOUND, "사용자를 찾을수 없습니다."));
 
-        if (this.userMapper.selectCountByEmpId(user.getEmpId()) > 0) {
+        if (this.userMapper.selectCountByEmpId(user.getEmpId()) > 1) {
             throw new EditException(
                     EditFailReason.DUPLICATE_EMP_ID,
                     "중복된 사번 입니다."
             );
         }
-        if (this.userMapper.selectCountByEmail(user.getEmail()) > 0) {
+        if (this.userMapper.selectCountByEmail(user.getEmail()) > 1) {
             throw new EditException(
                     EditFailReason.DUPLICATE_EMAIL,
                     "중복된 이메일 입니다."
             );
         }
-        if (this.userMapper.selectCountByPhoneNumber(user.getPhoneNumber()) > 0) {
+        if (this.userMapper.selectCountByPhoneNumber(user.getPhoneNumber()) > 1) {
             throw new EditException(
                     EditFailReason.DUPLICATE_PHONE,
                     "중복된 전화번호 입니다."
@@ -168,7 +168,7 @@ public class UserServices {
         dbUser.setTotalDayOffs(user.getTotalDayOffs());
 
 
-        int result = this.userMapper.register(dbUser);
+        int result = this.userMapper.update(dbUser);
 
         if (result <= 0) {
             throw new EditException(
