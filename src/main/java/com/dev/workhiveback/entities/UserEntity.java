@@ -10,19 +10,20 @@ import java.time.LocalDate;
 @Setter
 @EqualsAndHashCode(of = "index")
 public class UserEntity {
-    int index;
-    int empId;
-    int teamCode;
-    int roleCode;
-    int userState;
+    private int index;
+    private int empId;
+    private int teamCode;
+    private int roleCode;
+    private int userState;
 
-    String name;
-    String phoneNumber;
-    LocalDate birth;
-    LocalDate startDate;
-    String email;
-    String password;
-    float totalDayOffs;
-    float remainingDayOffs;
-    String picture;
+    private String name;
+    private String phoneNumber;
+    private LocalDate birth;
+    private LocalDate startDate;
+    private String email;
+    private String password;
+    private float totalDayOffs;
+    private float remainingDayOffs;
+    private byte[] profile;
+    private String imageUrl;
 }

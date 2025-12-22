@@ -1,7 +1,7 @@
 package com.dev.workhiveback.exceptions;
 
 
-import com.dev.workhiveback.results.reasons.LoginFailReason;
+import com.dev.workhiveback.results.reasons.login.LoginFailReason;
 import lombok.Getter;
 
 @Getter

@@ -34,7 +34,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        if (request.getMethod().equals("OPTIONS")) {
+        if(request.getMethod().equals("OPTIONS")) {
             return true;//OPTIONS 메서드는 필터 대상이 아니다.
         }
         return false;
@@ -45,12 +45,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             String token = parserBearer(request);//Authorization 헤더에서 jwt 토큰 파싱
-            log.info("doFilterInternal");
+//            log.info("doFilterInternal");
 
             //토큰이 존재하고 null이 아닌 경우
             if (token != null && !token.equalsIgnoreCase("null")) {
                 String empId = tokenProvider.validateAndGetUserEmpId(token);
-                log.info("user empId: " + empId);
 
                 UserEntity user = userMapper.selectByEmpId(empId)
                         .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));

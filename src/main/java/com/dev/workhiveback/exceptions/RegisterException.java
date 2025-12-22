@@ -1,6 +1,6 @@
 package com.dev.workhiveback.exceptions;
 
-import com.dev.workhiveback.results.reasons.RegisterFailReason;
+import com.dev.workhiveback.results.reasons.register.RegisterFailReason;
 import lombok.Getter;
 
 @Getter

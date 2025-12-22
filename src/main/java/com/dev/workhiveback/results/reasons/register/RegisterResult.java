@@ -1,4 +1,4 @@
-package com.dev.workhiveback.results.reasons;
+package com.dev.workhiveback.results.reasons.register;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

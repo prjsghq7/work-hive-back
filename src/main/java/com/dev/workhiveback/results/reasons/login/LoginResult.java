@@ -1,9 +1,7 @@
-package com.dev.workhiveback.results.reasons;
+package com.dev.workhiveback.results.reasons.login;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.util.List;
 
 @Getter
 @AllArgsConstructor

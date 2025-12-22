@@ -22,20 +22,20 @@
 
 
     <select id="selectCountByEmpId" resultType="java.lang.Integer">
-        SELECT 0
+        SELECT COUNT(*)
         FROM `wh`.`users`
         WHERE `emp_id` = #{empId}
     </select>
 
 
     <select id="selectCountByEmail" resultType="java.lang.Integer">
-        SELECT 0
+        SELECT COUNT(*)
         FROM `wh`.`users`
         WHERE `email` = #{email}
     </select>
 
     <select id="selectCountByPhoneNumber" resultType="java.lang.Integer">
-        SELECT 0
+        SELECT COUNT(*)
         FROM `wh`.`users`
         WHERE `phone_number` = #{phoneNumber}
     </select>
@@ -55,6 +55,8 @@
                `total_day_offs`,
                `remaining_day_offs`
         FROM `wh`.`users`
+        WHERE `index` = #{index}
+        LIMIT 1
     </select>
 
     <insert id="register"
@@ -105,7 +107,7 @@
                `password`,
                `total_day_offs` as 'totalDayOffs',
                `remaining_day_offs` as 'remainingDayOffs'
-        from `wh`.users
+        from `wh`.`users`
         where `emp_id` = #{empId};
 
     </select>

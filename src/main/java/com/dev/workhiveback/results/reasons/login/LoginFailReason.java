@@ -1,4 +1,4 @@
-package com.dev.workhiveback.results.reasons;
+package com.dev.workhiveback.results.reasons.login;
 
 public enum LoginFailReason {
     PASSWORD_TOO_LONG,

@@ -7,7 +7,7 @@ import com.dev.workhiveback.entities.CodeEntity;
 import com.dev.workhiveback.dtos.UserDto;
 import com.dev.workhiveback.entities.UserEntity;
 import org.apache.ibatis.annotations.Mapper;
-import org.springframework.data.repository.query.Param;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,5 +41,5 @@ public interface UserMapper {
 
     int register(UserEntity user);
 
-    Optional<UserEntity> selectByEmpId(String emp_id);
+    Optional<UserEntity> selectByEmpId(@Param("empId") String empId);
 }

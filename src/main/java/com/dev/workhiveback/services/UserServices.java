@@ -11,17 +11,19 @@ import com.dev.workhiveback.exceptions.RegisterException;
 import com.dev.workhiveback.exceptions.user.EditException;
 import com.dev.workhiveback.mappers.UserMapper;
 import com.dev.workhiveback.results.reasons.*;
+import com.dev.workhiveback.results.reasons.login.LoginFailReason;
+import com.dev.workhiveback.results.reasons.login.LoginResult;
+import com.dev.workhiveback.results.reasons.register.RegisterFailReason;
+import com.dev.workhiveback.results.reasons.register.RegisterResult;
 import com.dev.workhiveback.results.reasons.user.EditFailReason;
 import com.dev.workhiveback.results.reasons.user.EditResult;
 import com.dev.workhiveback.results.reasons.user.SearchResult;
 import com.dev.workhiveback.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -35,7 +37,7 @@ public class UserServices {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
 
-    private static final int DEFAULT_ROLE_CODE =999;
+    private static final int DEFAULT_ROLE_CODE = 999;
 
     public LoginResult login(LoginDto request) {
 
@@ -84,6 +86,7 @@ public class UserServices {
         user.setUserState(1);
         user.setRemainingDayOffs(0);
         user.setTotalDayOffs(0);
+        user.setProfile(new byte[1]);
         int result = this.userMapper.register(user);
 
         if (result <= 0) {
@@ -104,19 +107,19 @@ public class UserServices {
         return new SearchResult(userList);
     }
 
-    public CodeResult getTeamCodes(){
+    public CodeResult getTeamCodes() {
         List<CodeEntity> teamCodes = userMapper.selectTeamCodes();
         boolean result = teamCodes.isEmpty();
         return new CodeResult(result, teamCodes);
     }
 
-    public CodeResult getUserStateCodes(){
+    public CodeResult getUserStateCodes() {
         List<CodeEntity> userStateCodes = userMapper.selectUserStateCodes();
         boolean result = userStateCodes.isEmpty();
         return new CodeResult(result, userStateCodes);
     }
 
-    public CodeResult getRoleCodes(){
+    public CodeResult getRoleCodes() {
         List<CodeEntity> userStateCodes = userMapper.selectRoleCodes();
         boolean result = userStateCodes.isEmpty();
         return new CodeResult(result, userStateCodes);
@@ -125,6 +128,13 @@ public class UserServices {
     public UserEditDto getUserByIndex(int index) {
         return userMapper.selectUserForEdit(index);
     }
+
+    public UserEntity getUserByEmpId(String empId) {
+        return userMapper.selectByEmpId(empId)
+                .orElseThrow(() -> new LoginException(LoginFailReason.USER_NOT_FOUND, "사번이 없다."));
+    }
+
+    ;
 
     public EditResult updateUser(UserEditDto user) {
         UserEntity dbUser = this.userMapper.selectByIndex(user.getIndex())
@@ -148,6 +158,7 @@ public class UserServices {
                     "중복된 전화번호 입니다."
             );
         }
+
         dbUser.setName(user.getName());
         dbUser.setTeamCode(user.getTeamCode());
         dbUser.setRoleCode(user.getRoleCode());
@@ -155,6 +166,7 @@ public class UserServices {
         dbUser.setEmail(user.getEmail());
         dbUser.setPhoneNumber(user.getPhoneNumber());
         dbUser.setTotalDayOffs(user.getTotalDayOffs());
+
 
         int result = this.userMapper.register(dbUser);
 

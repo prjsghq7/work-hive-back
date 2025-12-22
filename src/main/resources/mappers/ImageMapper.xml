@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dev.workhiveback.mappers.ImageMapper">
+    <insert id="insert" keyColumn="index" keyProperty="index" useGeneratedKeys="true">
+        insert into `wh`.`images` (`index`, `name`, `content_type`, `created_at`, `data`)
+        VALUES (#{index},
+                #{name},
+                #{contentType},
+                #{createdAt},
+                #{data});
+
+    </insert>
+    <select id="selectByIndex" resultType="com.dev.workhiveback.entities.ImageEntity">
+        select `index`        as 'index',
+               `name`         as 'name',
+               `content_type` as 'contentType',
+               `created_at`   as 'createdAt',
+               `data`         as 'data'
+        from `wh`.`images`
+        where `index` = #{index}
+    </select>
+</mapper>

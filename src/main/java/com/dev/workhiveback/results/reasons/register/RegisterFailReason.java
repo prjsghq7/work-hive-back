@@ -1,4 +1,4 @@
-package com.dev.workhiveback.results.reasons;
+package com.dev.workhiveback.results.reasons.register;
 
 public enum RegisterFailReason {
     NOT_ENOUGH_INFO,
