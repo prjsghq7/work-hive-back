@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @EqualsAndHashCode(of = "index")
 public class UserEntity {
     private int index;
-    private int empId;
+    private String empId;
     private int teamCode;
     private int roleCode;
     private int userState;
