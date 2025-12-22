@@ -3,19 +3,20 @@
 <mapper namespace="com.dev.workhiveback.mappers.UserMapper">
     <update id="update">
         UPDATE `wh`.`users`
-        SET
-            `emp_id` = #{user.empId},
-            `team_code` = #{user.teamCode},
-            `role_code` = #{user.roleCode},
-            `user_state` = #{user.userState},
-            `name` = #{user.name},
-            `phone_number` = #{user.phoneNumber},
-            `birth` = #{user.birth},
-            `start_date` = #{user.startDate},
-            `email` = #{user.email},
-            `password` = #{user.password},
-            `total_day_offs` = #{user.totalDayOffs},
-            `remaining_day_offs` = #{user.remainingDayOffs}
+        SET `emp_id`             = #{user.empId},
+            `team_code`          = #{user.teamCode},
+            `role_code`          = #{user.roleCode},
+            `user_state`         = #{user.userState},
+            `name`               = #{user.name},
+            `phone_number`       = #{user.phoneNumber},
+            `birth`              = #{user.birth},
+            `start_date`         = #{user.startDate},
+            `email`              = #{user.email},
+            `password`           = #{user.password},
+            `total_day_offs`     = #{user.totalDayOffs},
+            `remaining_day_offs` = #{user.remainingDayOffs},
+            `profile`            = #{user.profile},
+            `image_url`          = #{user.imageUrl}
         WHERE `index` = #{user.index}
         LIMIT 1
     </update>
@@ -41,19 +42,21 @@
     </select>
 
     <select id="selectByIndex" resultType="com.dev.workhiveback.entities.UserEntity">
-        SELECT `index`,
-               `emp_id`,
-               `team_code`,
-               `role_code`,
-               `user_state`,
-               `name`,
-               `phone_number`,
-               `birth`,
-               `start_date`,
-               `email`,
-               `password`,
-               `total_day_offs`,
-               `remaining_day_offs`
+        SELECT `index`              as `index`,
+               `emp_id`             as `empId`,
+               `team_code`          as `teamCode`,
+               `role_code`          as `roleCode`,
+               `user_state`         as `userState`,
+               `name`               as `name`,
+               `phone_number`       as `phoneNumber`,
+               `birth`              as `birth`,
+               `start_date`         as `startDate`,
+               `email`              as `email`,
+               `password`           as `password`,
+               `total_day_offs`     as `totalDayOffs`,
+               `remaining_day_offs` as `remainingDayOffs`,
+               `profile`            as `profile`,
+               `image_url`          as `imageUrl`
         FROM `wh`.`users`
         WHERE `index` = #{index}
         LIMIT 1
@@ -67,7 +70,7 @@
 
         INSERT INTO `wh`.`users`
         (`emp_id`, `user_state`, `name`, `phone_number`, `birth`, `start_date`, `email`,
-         `password`, `total_day_offs`, `remaining_day_offs`)
+         `password`, `total_day_offs`, `remaining_day_offs`,`profile`)
         VALUES (#{empId},
                 #{userState},
                 #{name},
@@ -77,7 +80,9 @@
                 #{email},
                 #{password},
                 #{totalDayOffs},
-                #{remainingDayOffs});
+                #{remainingDayOffs},
+                #{profile}
+               );
     </insert>
     <select id="selectById" resultType="com.dev.workhiveback.dtos.UserDto">
         select `emp_id` as 'empId',
