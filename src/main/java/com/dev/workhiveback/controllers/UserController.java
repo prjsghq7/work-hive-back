@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -131,5 +132,31 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')") // ROLE_ADMIN 가진 사람만
     public String adminPage() {
         return "관리자 전용 페이지";
+    }
+
+
+    @GetMapping("/permission")
+    public String getUserPermission(Authentication authentication) {
+
+        // 로그인 안 한 경우
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "NOT_LOGIN";
+        }
+
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+
+        boolean isUser = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_USER"));
+
+        if (isAdmin) {
+            return "ADMIN";
+        }
+
+        if (isUser) {
+            return "USER";
+        }
+
+        return "UNKNOWN";
     }
 }
