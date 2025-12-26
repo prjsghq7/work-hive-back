@@ -12,12 +12,18 @@ import com.dev.workhiveback.results.reasons.register.RegisterResult;
 import com.dev.workhiveback.services.UserServices;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.print.attribute.standard.Media;
+import java.io.IOException;
 
 @Slf4j
 @RestController
@@ -72,44 +78,47 @@ public class UserController {
         return ResponseEntity.ok(CommonResult.success(user));
     }
 
-    @PatchMapping("/info")
-    public ResponseEntity<CommonResult<EditResult>> patchUser(@RequestBody UserEditDto user) {
-        EditResult result = userServices.updateUser(user);
+    @PatchMapping(value = "/info", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<CommonResult<EditResult>> patchUser(@ModelAttribute UserEditDto user, @RequestParam(value = "profile", required = false) MultipartFile profile, @AuthenticationPrincipal UserEntity loginUser) throws IOException {
+        EditResult result = userServices.updateUser(user, profile);
         return ResponseEntity.ok(CommonResult.success(result));
     }
 
-    @GetMapping("/me")
-    public UserEntity me(@AuthenticationPrincipal UserEntity user) {
-        return user;  // 현재 로그인한 유저 정보 그대로 리턴
+    @PatchMapping(value = "/user-info", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<CommonResult<EditResult>> patchUserInfo(@AuthenticationPrincipal UserEntity loginUser, @ModelAttribute UserEditDto user, @RequestParam(value = "profile", required = false) MultipartFile profile) throws IOException {
+        EditResult result = this.userServices.updateUserInfo(loginUser.getIndex(), user, profile);
+        return ResponseEntity.ok(CommonResult.success(result));
     }
-
 
     //user의 이미지를 물러오기 위한 api.
     @GetMapping(value = "/profile-image", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<byte[]> getProfileImage(@AuthenticationPrincipal UserEntity user) {
+    public ResponseEntity<byte[]> getProfileImage(@AuthenticationPrincipal UserEntity loginUser) throws IOException {
+        UserEntity user = userServices.getUserByEmpId(loginUser.getEmpId());
         byte[] profileImage = user.getProfile();
+        String contentType = user.getProfileContentType();
 
         if (profileImage == null || profileImage.length == 0) {
-            return ResponseEntity.notFound().build();
+            ClassPathResource res = new ClassPathResource("/static/default-profile.png");
+            byte[] defaultBytes = res.getInputStream().readAllBytes();
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_PNG)
+                    .cacheControl(CacheControl.noCache())
+                    .body(defaultBytes);
+
         }
+        MediaType mediaType = (contentType == null || contentType.isBlank()) ? MediaType.IMAGE_PNG : MediaType.parseMediaType(contentType);
+
         return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_PNG)
+                .contentType(mediaType)
+                .cacheControl(CacheControl.noCache())
                 .body(profileImage);
 
     }
 
-    @GetMapping(value = "/profile", produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<byte[]> getProfileImage(@RequestParam(value = "empId", required = false) String empId) {
-        UserEntity user = this.userServices.getUserByEmpId(empId);
-        if (user == null) {
-            return ResponseEntity.notFound().build();
-        }
-        byte[] profileImage = user.getProfile();
-        return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_PNG)
-                .body(profileImage);
+    @GetMapping("/edit")
+    public UserEntity me(@AuthenticationPrincipal UserEntity user) {
+        return user;  // 현재 로그인한 유저 정보 그대로 리턴
     }
-
 
     //---------------- 사용법-----------------------------
     //로그인한 사람(ROLE_USER,ROLE_ADMIN상관없이)

@@ -21,14 +21,18 @@ import com.dev.workhiveback.results.reasons.user.SearchResult;
 import com.dev.workhiveback.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 import java.time.LocalDate;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServices {
@@ -136,7 +140,7 @@ public class UserServices {
 
     ;
 
-    public EditResult updateUser(UserEditDto user) {
+    public EditResult updateUser(UserEditDto user, MultipartFile profile) throws IOException {
         UserEntity dbUser = this.userMapper.selectByIndex(user.getIndex())
                 .orElseThrow(() -> new EditException(EditFailReason.NOT_FOUND, "사용자를 찾을수 없습니다."));
 
@@ -166,15 +170,31 @@ public class UserServices {
         dbUser.setEmail(user.getEmail());
         dbUser.setPhoneNumber(user.getPhoneNumber());
         dbUser.setTotalDayOffs(user.getTotalDayOffs());
-
+        if (profile != null) {
+            dbUser.setProfile(profile.getBytes());
+        }
 
         int result = this.userMapper.update(dbUser);
-
         if (result <= 0) {
             throw new EditException(
                     EditFailReason.EDIT_FAILED,
                     "수정에 실패 하였습니다."
             );
+        }
+        return EditResult.success();
+    }
+
+    public EditResult updateUserInfo(int userIndex, UserEditDto dto, MultipartFile profile) throws IOException {
+        if (this.userMapper.updateUserInfo(userIndex, dto.getName(), dto.getPhoneNumber(), dto.getEmail()) == 0) {
+            throw new EditException(EditFailReason.EDIT_FAILED, "업로드 실패");
+        }
+        if (profile != null && !profile.isEmpty()) {
+            String contentType = profile.getContentType();
+            if (contentType == null || !contentType.startsWith("image/")) {
+                throw new EditException(EditFailReason.EDIT_FAILED, "이미지 파일만 업로드");
+            }
+            byte[] bytes = profile.getBytes();
+            this.userMapper.updateProfile(userIndex, bytes, contentType);
         }
         return EditResult.success();
     }

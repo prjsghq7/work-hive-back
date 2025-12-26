@@ -3,22 +3,34 @@
 <mapper namespace="com.dev.workhiveback.mappers.UserMapper">
     <update id="update">
         UPDATE `wh`.`users`
-        SET `emp_id`             = #{user.empId},
-            `team_code`          = #{user.teamCode},
-            `role_code`          = #{user.roleCode},
-            `user_state`         = #{user.userState},
-            `name`               = #{user.name},
-            `phone_number`       = #{user.phoneNumber},
-            `birth`              = #{user.birth},
-            `start_date`         = #{user.startDate},
-            `email`              = #{user.email},
-            `password`           = #{user.password},
-            `total_day_offs`     = #{user.totalDayOffs},
-            `remaining_day_offs` = #{user.remainingDayOffs},
-            `profile`            = #{user.profile},
-            `image_url`          = #{user.imageUrl}
+        SET `emp_id`               = #{user.empId},
+            `team_code`            = #{user.teamCode},
+            `role_code`            = #{user.roleCode},
+            `user_state`           = #{user.userState},
+            `name`                 = #{user.name},
+            `phone_number`         = #{user.phoneNumber},
+            `birth`                = #{user.birth},
+            `start_date`           = #{user.startDate},
+            `email`                = #{user.email},
+            `password`             = #{user.password},
+            `total_day_offs`       = #{user.totalDayOffs},
+            `remaining_day_offs`   = #{user.remainingDayOffs}
         WHERE `index` = #{user.index}
         LIMIT 1
+    </update>
+
+    <update id="updateProfile">
+        update `wh`.`users`
+        set `profile`=#{profile},
+            `profile_content_type` = #{contentType}
+        where `index` = #{index};
+    </update>
+    <update id="updateUserInfo">
+        update `wh`.`users`
+        set `name`=#{name},
+            `phone_number`=#{phoneNumber},
+            `email`=#{email}
+        where `index` = #{index};
     </update>
 
 
@@ -42,21 +54,21 @@
     </select>
 
     <select id="selectByIndex" resultType="com.dev.workhiveback.entities.UserEntity">
-        SELECT `index`              as `index`,
-               `emp_id`             as `empId`,
-               `team_code`          as `teamCode`,
-               `role_code`          as `roleCode`,
-               `user_state`         as `userState`,
-               `name`               as `name`,
-               `phone_number`       as `phoneNumber`,
-               `birth`              as `birth`,
-               `start_date`         as `startDate`,
-               `email`              as `email`,
-               `password`           as `password`,
-               `total_day_offs`     as `totalDayOffs`,
-               `remaining_day_offs` as `remainingDayOffs`,
-               `profile`            as `profile`,
-               `image_url`          as `imageUrl`
+        SELECT `index`                as `index`,
+               `emp_id`               as `empId`,
+               `team_code`            as `teamCode`,
+               `role_code`            as `roleCode`,
+               `user_state`           as `userState`,
+               `name`                 as `name`,
+               `phone_number`         as `phoneNumber`,
+               `birth`                as `birth`,
+               `start_date`           as `startDate`,
+               `email`                as `email`,
+               `password`             as `password`,
+               `total_day_offs`       as `totalDayOffs`,
+               `remaining_day_offs`   as `remainingDayOffs`,
+               `profile`              as `profile`,
+               `profile_content_type` as `profileContentType`
         FROM `wh`.`users`
         WHERE `index` = #{index}
         LIMIT 1
@@ -85,33 +97,35 @@
                );
     </insert>
     <select id="selectById" resultType="com.dev.workhiveback.dtos.UserDto">
-        select `emp_id` as 'empId',
+        select `emp_id`             as 'empId',
                `password`,
-               `team_code` as 'teamCode',
-               `role_code` as 'roleCode',
+               `team_code`          as 'teamCode',
+               `role_code`          as 'roleCode',
                `name`,
-               `phone_number` as 'phoneNumber',
+               `phone_number`       as 'phoneNumber',
                `birth`,
-               `start_date` as 'startDate',
-               `total_day_offs` as 'totalDayOffs',
+               `start_date`         as 'startDate',
+               `total_day_offs`     as 'totalDayOffs',
                `remaining_day_offs` as 'remainingDayOffs'
         from `wh`.`users`
-        where `emp_id`=#{empId};
+        where `emp_id` = #{empId};
     </select>
     <select id="selectByEmpId" resultType="com.dev.workhiveback.entities.UserEntity">
-        select `index`,
-               `emp_id` as 'empId',
-               `team_code` as 'teamCode',
-               `role_code` as 'roleCode',
-               `user_state` as 'userState',
-               `name`,
-               `phone_number` as 'phoneNumber',
-               `birth`,
-               `start_date` as 'startDate',
-               `email`,
-               `password`,
-               `total_day_offs` as 'totalDayOffs',
-               `remaining_day_offs` as 'remainingDayOffs'
+        select `index`                as 'index',
+               `emp_id`               as 'empId',
+               `team_code`            as 'teamCode',
+               `role_code`            as 'roleCode',
+               `user_state`           as 'userState',
+               `name`                 as 'name',
+               `phone_number`         as 'phoneNumber',
+               `birth`                as 'birth',
+               `start_date`           as 'startDate',
+               `profile`              as 'profile',
+               `profile_content_type` as 'profileContentType',
+               `email`                as 'email',
+               `password`             as 'password',
+               `total_day_offs`       as 'totalDayOffs',
+               `remaining_day_offs`   as 'remainingDayOffs'
         from `wh`.`users`
         where `emp_id` = #{empId};
 
@@ -163,14 +177,14 @@
     </select>
 
     <select id="selectUserForEdit" resultType="com.dev.workhiveback.dtos.user.UserEditDto">
-        SELECT `index`        AS 'index',
-               `emp_id`        AS 'empId',
-               `name`         AS 'name',
-               `team_code`     AS 'teamCode',
-               `role_code`     AS 'roleCode',
-               `user_state`    AS 'userState',
-               `email`        AS 'email',
-               `phone_number`  AS 'phoneNumber',
+        SELECT `index`          AS 'index',
+               `emp_id`         AS 'empId',
+               `name`           AS 'name',
+               `team_code`      AS 'teamCode',
+               `role_code`      AS 'roleCode',
+               `user_state`     AS 'userState',
+               `email`          AS 'email',
+               `phone_number`   AS 'phoneNumber',
                `total_day_offs` AS 'totalDayOffs'
         FROM `wh`.`users`
         WHERE `index` = #{index};

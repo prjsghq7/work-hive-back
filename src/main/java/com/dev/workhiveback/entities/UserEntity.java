@@ -25,5 +25,5 @@ public class UserEntity {
     private float totalDayOffs;
     private float remainingDayOffs;
     private byte[] profile;
-    private String imageUrl;
+    private String profileContentType;
 }

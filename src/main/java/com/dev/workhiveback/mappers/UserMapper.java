@@ -23,13 +23,23 @@ public interface UserMapper {
                                          @Param(value = "teamCode") int teamCode,
                                          @Param(value = "userState") int userState);
 
-    int selectCountByEmpId(@Param(value = "empId") int empId);
+    int selectCountByEmpId(@Param(value = "empId") String empId);
 
     int selectCountByEmail(@Param(value = "email") String email);
 
     int selectCountByPhoneNumber(@Param(value = "phoneNumber") String phoneNumber);
 
+    //userInfo 변경하는 mapper
     int update(@Param(value = "user") UserEntity user);
+
+    int updateUserInfo(@Param("index") int index,
+                       @Param("name") String name,
+                       @Param("phoneNumber") String phoneNumber,
+                       @Param("email") String email);
+
+    int updateProfile(@Param("index") int index,
+                      @Param("profile") byte[] profile,
+                      @Param("contentType") String contentType);
 
     List<CodeEntity> selectTeamCodes();
 

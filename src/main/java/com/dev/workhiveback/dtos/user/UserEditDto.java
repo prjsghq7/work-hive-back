@@ -10,8 +10,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserEditDto {
-    int index;
-    int empId;
+    int index;// 그냥 회원가입 할때 그 인덱스
+    String empId;
     String name;
 
     int teamCode;
@@ -21,4 +21,5 @@ public class UserEditDto {
     String email;
     String phoneNumber;
     int totalDayOffs;
+
 }

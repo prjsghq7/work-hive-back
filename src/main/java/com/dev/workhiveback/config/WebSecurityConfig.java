@@ -55,7 +55,7 @@ public class WebSecurityConfig {
                                         "/leave/**"             //임시: 캘린더 테스트
                                 ).permitAll()
                                 .requestMatchers("/board/**").permitAll()
-                                .requestMatchers("/user/login", "/user/register", "/").permitAll()
+                                .requestMatchers("/user/login", "/user/register", "/","/user/profile","/api/profile/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 //jwt 필터를 usernamePasswordAuthenticationFilter 이후에 실행되도록 추가
@@ -81,4 +81,5 @@ public class WebSecurityConfig {
         source.registerCorsConfiguration("/**", corsConfiguration);//모든 경로에 대해 설정 적용
         return source;
     }
+
 }
