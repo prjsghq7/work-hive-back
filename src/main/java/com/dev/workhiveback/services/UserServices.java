@@ -90,7 +90,6 @@ public class UserServices {
         user.setUserState(1);
         user.setRemainingDayOffs(0);
         user.setTotalDayOffs(0);
-        user.setProfile(new byte[1]);
         int result = this.userMapper.register(user);
 
         if (result <= 0) {
