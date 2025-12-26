@@ -18,7 +18,16 @@ public class BoardService {
         boardMapper.insertBoard(dto);
     }
 
+    public int update(BoardNewDto dto, int id) {
+        return boardMapper.updateBoard(dto, id);
+    }
+
+    public int deleteUpdate(int id) {
+        return boardMapper.deleteUpdateBoard(id);
+    }
+
     public BoardEntity findById(int id) {
+        boardMapper.increaseView(id);
         return boardMapper.findById(id);
     }
 

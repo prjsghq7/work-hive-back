@@ -5,9 +5,29 @@
 <mapper namespace="com.dev.workhiveback.mappers.BoardMapper">
 
     <insert id="insertBoard">
-        insert into `wh`.`boards` (emp_id, type, title, content, view, created_at, is_deleted)
-        values (#{empId}, #{type}, #{title}, #{content}, 0, now(), false)
+        insert into `wh`.`boards` (`emp_id`, `type`, `title`, `content`, `view`, `created_at`, `is_deleted`)
+        values (#{dto.empId}, #{dto.type}, #{dto.title}, #{dto.content}, 0, now(), false)
     </insert>
+
+    <update id="increaseView">
+    update `wh`.`boards`
+    set `view` = `view` + 1
+    where `index` = #{id}
+    </update>
+
+    <update id="updateBoard">
+        update `wh`.`boards`
+        set `title`   = #{dto.title},
+            `content` = #{dto.content},
+            `type`    = #{dto.type}
+        where `index` = #{id}
+    </update>
+
+    <update id="deleteUpdateBoard">
+        update `wh`.`boards`
+        set `is_deleted` = true
+        where `index` = #{id}
+    </update>
 
     <select id="findById" resultType="com.dev.workhiveback.entities.BoardEntity">
         SELECT `index`      as `index`,
@@ -24,46 +44,55 @@
     </select>
 
     <select id="selectBoards" resultType="com.dev.workhiveback.entities.BoardEntity">
-        SELECT `index`      as `index`,
-               `emp_id`     as `empId`,
-               `type`       as `type`,
-               `title`      as `title`,
-               `content`    as `content`,
-               `view`       as `view`,
-               `created_at` as `createdAt`
-        FROM `wh`.`boards`
-        where `is_deleted` = false
-        ORDER BY `index` desc
+        select b.`index`      as `index`,
+               b.`emp_id`     as `empid`,
+               u.`name`       as `name`,
+               b.`type`       as `type`,
+               b.`title`      as `title`,
+               b.`content`    as `content`,
+               b.`view`       as `view`,
+               b.`created_at` as `createdat`
+        from `wh`.`boards` `b`
+                 join `wh`.`users` `u`
+                      on `b`.`emp_id` = `u`.`emp_id`
+        where b.is_deleted = false
+        order by b.`index` desc
     </select>
     <select id="selectNoticeBoards" resultType="com.dev.workhiveback.entities.BoardEntity">
-        select `index`      as `index`,
-               `emp_id`     as `empId`,
-               `type`       as `type`,
-               `title`      as `title`,
-               `content`    as `content`,
-               `view`       as `view`,
-               `created_at` as `createdAt`,
-               `updated_at` as `updatedAt`,
-               `is_deleted` as `isDeleted`
-        from `wh`.`boards`
-        where `type` = 1
-          and `is_deleted` = false
-        order by `index` desc
+        select `b`.`index`      as `index`,
+               `b`.`emp_id`     as `empid`,
+               `u`.`name`       as `name`,
+               `b`.`type`       as `type`,
+               `b`.`title`      as `title`,
+               `b`.`content`    as `content`,
+               `b`.`view`       as `view`,
+               `b`.`created_at` as `createdat`,
+               `b`.`updated_at` as `updatedat`,
+               `b`.`is_deleted` as `isdeleted`
+        from `wh`.`boards` `b`
+                 join `wh`.`users` `u`
+                      on `b`.`emp_id` = `u`.`emp_id`
+        where `b`.`type` = 1
+          and `b`.`is_deleted` = false
+        order by `b`.`index` desc
     </select>
     <select id="selectFamilyEventBoards" resultType="com.dev.workhiveback.entities.BoardEntity">
-        select `index`      as `index`,
-               `emp_id`     as `empId`,
-               `type`       as `type`,
-               `title`      as `title`,
-               `content`    as `content`,
-               `view`       as `view`,
-               `created_at` as `createdAt`,
-               `updated_at` as `updatedAt`,
-               `is_deleted` as `isDeleted`
-        from `wh`.`boards`
-        where `type` = 2
-          and `is_deleted` = false
-        order by `index` desc
+        select `b`.`index`      as `index`,
+               `b`.`emp_id`     as `empid`,
+               `u`.`name`       as `name`,
+               `b`.`type`       as `type`,
+               `b`.`title`      as `title`,
+               `b`.`content`    as `content`,
+               `b`.`view`       as `view`,
+               `b`.`created_at` as `createdat`,
+               `b`.`updated_at` as `updatedat`,
+               `b`.`is_deleted` as `isdeleted`
+        from `wh`.`boards` `b`
+                 join `wh`.`users` `u`
+                      on `b`.`emp_id` = `u`.`emp_id`
+        where `b`.`type` = 2
+          and `b`.`is_deleted` = false
+        order by `b`.`index` desc
     </select>
 
 </mapper>
