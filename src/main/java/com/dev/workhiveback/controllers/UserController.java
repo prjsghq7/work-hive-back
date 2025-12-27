@@ -1,6 +1,7 @@
 package com.dev.workhiveback.controllers;
 
 import com.dev.workhiveback.dtos.LoginDto;
+import com.dev.workhiveback.dtos.user.UserDetailDto;
 import com.dev.workhiveback.dtos.user.UserEditDto;
 import com.dev.workhiveback.entities.UserEntity;
 import com.dev.workhiveback.results.CommonResult;
@@ -70,6 +71,12 @@ public class UserController {
     public ResponseEntity<CommonResult<CodeResult>> getRoleList() {
         CodeResult result = userServices.getRoleCodes();
         return ResponseEntity.ok(CommonResult.success(result));
+    }
+
+    @GetMapping(value = "/detail-info")
+    public ResponseEntity<CommonResult<UserDetailDto>> getDetailInfo(@RequestParam int index) {
+        UserDetailDto user = userServices.getUserDetailByIndex(index);
+        return ResponseEntity.ok(CommonResult.success(user));
     }
 
     @GetMapping(value = "/info")

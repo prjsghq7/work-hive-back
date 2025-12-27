@@ -190,4 +190,19 @@
         WHERE `index` = #{index};
     </select>
 
+    <select id="selectUserForDetail" resultType="com.dev.workhiveback.dtos.user.UserDetailDto">
+        SELECT `u`.`index` AS 'index',
+            `u`.`emp_id` AS 'empId',
+            `u`.`name` AS 'name',
+            `t`.`display_text` AS 'teamName',
+            `r`.`display_text` AS 'roleName',
+            `u`.`email` AS 'email',
+            `u`.`phone_number` AS 'phoneNumber',
+            `u`.`image_url` AS 'profileImg'
+        FROM `wh`.`users` AS `u`
+                 LEFT JOIN `wh`.`teams` AS `t` ON `u`.`team_code` = `t`.`code`
+                 LEFT JOIN `wh`.`roles` AS `r` ON `u`.`role_code` = `r`.`code`
+        WHERE `index` = #{index}
+    </select>
+
 </mapper>

@@ -2,6 +2,7 @@ package com.dev.workhiveback.services;
 
 import com.dev.workhiveback.dtos.LoginDto;
 import com.dev.workhiveback.dtos.UserDto;
+import com.dev.workhiveback.dtos.user.UserDetailDto;
 import com.dev.workhiveback.dtos.user.UserEditDto;
 import com.dev.workhiveback.dtos.user.UserSearchDto;
 import com.dev.workhiveback.entities.CodeEntity;
@@ -126,6 +127,10 @@ public class UserServices {
         List<CodeEntity> userStateCodes = userMapper.selectRoleCodes();
         boolean result = userStateCodes.isEmpty();
         return new CodeResult(result, userStateCodes);
+    }
+
+    public UserDetailDto getUserDetailByIndex(int index) {
+        return userMapper.selectUserForDetail(index);
     }
 
     public UserEditDto getUserByIndex(int index) {

@@ -1,6 +1,7 @@
 package com.dev.workhiveback.mappers;
 
 import com.dev.workhiveback.dtos.LoginDto;
+import com.dev.workhiveback.dtos.user.UserDetailDto;
 import com.dev.workhiveback.dtos.user.UserEditDto;
 import com.dev.workhiveback.dtos.user.UserSearchDto;
 import com.dev.workhiveback.entities.CodeEntity;
@@ -46,6 +47,8 @@ public interface UserMapper {
     List<CodeEntity> selectUserStateCodes();
 
     List<CodeEntity> selectRoleCodes();
+
+    UserDetailDto selectUserForDetail(@Param(value = "index") int index);
 
     UserEditDto selectUserForEdit(@Param(value = "index") int index);
 

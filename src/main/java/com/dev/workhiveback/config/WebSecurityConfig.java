@@ -52,6 +52,7 @@ public class WebSecurityConfig {
                                         "/user/team-list",        //임시(삭제 예정)
                                         "/user/role-list",        //임시(삭제 예정)
                                         "/user/info",        //임시(삭제 예정)
+                                        "/user/detail-info",        //임시(삭제 예정)
                                         "/leave/**"             //임시: 캘린더 테스트
                                 ).permitAll()
                                 .requestMatchers("/board/**").permitAll()
