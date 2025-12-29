@@ -10,7 +10,7 @@
         FROM `wh`.`day_offs` AS `o`
                  LEFT JOIN `wh`.`day_offs_states` AS `s` ON `o`.`state` = `s`.`code`
                  LEFT JOIN `wh`.`day_offs_types` AS `t` ON `o`.`type` = `t`.`code`
-        WHERE `s`.`code` = 3
+        WHERE `o`.`requester_id` = #{empId} AND `s`.`code` = 3
     </select>
 
     <select id="selectLeaves" resultType="com.dev.workhiveback.entities.LeaveEntity">
@@ -26,4 +26,11 @@
         FROM `wh`.`day_offs`
         ORDER BY `index` DESC
     </select>
+
+    <insert id="insertLeave">
+        INSERT INTO `wh`.`day_offs` (`requester_id`, `approver_id`, `state`, `type`, `request_date`, `approve_date`,
+                                     `start_date`, `end_date`)
+        VALUES (#{leave.requesterId}, #{leave.approverId}, #{leave.state}, #{leave.type}, #{leave.requestDate},
+                #{leave.approveDate}, #{leave.startDate}, #{leave.endDate})
+    </insert>
 </mapper>

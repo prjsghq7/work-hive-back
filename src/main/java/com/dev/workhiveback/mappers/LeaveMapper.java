@@ -9,7 +9,9 @@ import java.util.List;
 
 @Mapper
 public interface LeaveMapper {
-    List<CalendarDto> selectCalendarData(@Param(value = "userIndex") int userIndex);
+    List<CalendarDto> selectCalendarData(@Param(value = "empId") String empId);
 
     List<LeaveEntity> selectLeaves();
+
+    int insertLeave(@Param(value="leave") LeaveEntity leaveEntity);
 }

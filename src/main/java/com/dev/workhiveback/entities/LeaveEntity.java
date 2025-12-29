@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 @Builder
 public class LeaveEntity {
     private int index;
-    private int requesterId;
-    private int approverId;
+    private String requesterId;
+    private String approverId;
     private int state;
     private int type;
     private LocalDateTime requestDate;
