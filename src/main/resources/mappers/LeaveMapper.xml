@@ -12,4 +12,18 @@
                  LEFT JOIN `wh`.`day_offs_types` AS `t` ON `o`.`type` = `t`.`code`
         WHERE `s`.`code` = 3
     </select>
+
+    <select id="selectLeaves" resultType="com.dev.workhiveback.entities.LeaveEntity">
+        SELECT `index`        AS `index`,
+               `requester_id` AS `requesterId`,
+               `approver_id`  AS `approverId`,
+               `state`        AS `state`,
+               `type`         AS `type`,
+               `request_date` AS `requestDate`,
+               `approve_date` AS `approveDate`,
+               `start_date`   AS `startDate`,
+               `end_date`     AS `endDate`
+        FROM `wh`.`day_offs`
+        ORDER BY `index` DESC
+    </select>
 </mapper>
