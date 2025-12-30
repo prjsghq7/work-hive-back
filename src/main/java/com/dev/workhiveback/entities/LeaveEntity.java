@@ -16,6 +16,7 @@ public class LeaveEntity {
     private String approverId;
     private int state;
     private int type;
+    private String reason;
     private LocalDateTime requestDate;
     private LocalDateTime approveDate;
     private LocalDate startDate;

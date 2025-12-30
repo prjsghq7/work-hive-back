@@ -28,9 +28,9 @@
     </select>
 
     <insert id="insertLeave">
-        INSERT INTO `wh`.`day_offs` (`requester_id`, `approver_id`, `state`, `type`, `request_date`, `approve_date`,
+        INSERT INTO `wh`.`day_offs` (`requester_id`, `approver_id`, `state`, `type`, `reason`, `request_date`, `approve_date`,
                                      `start_date`, `end_date`)
-        VALUES (#{leave.requesterId}, #{leave.approverId}, #{leave.state}, #{leave.type}, #{leave.requestDate},
+        VALUES (#{leave.requesterId}, #{leave.approverId}, #{leave.state}, #{leave.type}, #{leave.reason}, #{leave.requestDate},
                 #{leave.approveDate}, #{leave.startDate}, #{leave.endDate})
     </insert>
 </mapper>
