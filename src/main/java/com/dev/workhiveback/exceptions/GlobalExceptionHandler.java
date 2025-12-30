@@ -1,9 +1,11 @@
 package com.dev.workhiveback.exceptions;
 
+import com.dev.workhiveback.exceptions.user.EditException;
 import com.dev.workhiveback.results.CommonResult;
 import com.dev.workhiveback.results.reasons.image.ImageFailReason;
 import com.dev.workhiveback.results.reasons.login.LoginFailReason;
 import com.dev.workhiveback.results.reasons.register.RegisterFailReason;
+import com.dev.workhiveback.results.reasons.user.EditFailReason;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -35,6 +37,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ImageException.class)
     public ResponseEntity<CommonResult<Void>> handleImageException(ImageException e) {
         ImageFailReason reason = e.getReason();
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(CommonResult.fail(reason.name(), e.getMessage()));
+    }
+
+    @ExceptionHandler(EditException.class)
+    public ResponseEntity<CommonResult<Void>> handleEditException(EditException e) {
+        EditFailReason reason = e.getReason();
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(CommonResult.fail(reason.name(), e.getMessage()));
