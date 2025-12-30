@@ -52,7 +52,7 @@ public class BoardController {
         return ResponseEntity.ok(CommonResult.success(result));
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/detail/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CommonResult<BoardResult>> getDetail(
             @PathVariable("id") int id) {
         BoardEntity board = boardService.findById(id);
