@@ -11,6 +11,7 @@ import com.dev.workhiveback.exceptions.LoginException;
 import com.dev.workhiveback.exceptions.RegisterException;
 import com.dev.workhiveback.exceptions.user.EditException;
 import com.dev.workhiveback.mappers.UserMapper;
+import com.dev.workhiveback.regexes.UserRegex;
 import com.dev.workhiveback.results.reasons.*;
 import com.dev.workhiveback.results.reasons.login.LoginFailReason;
 import com.dev.workhiveback.results.reasons.login.LoginResult;
@@ -142,25 +143,47 @@ public class UserServices {
                 .orElseThrow(() -> new LoginException(LoginFailReason.USER_NOT_FOUND, "사번이 없다."));
     }
 
-    ;
 
     public EditResult updateUser(UserEditDto user, MultipartFile profile) throws IOException {
         UserEntity dbUser = this.userMapper.selectByIndex(user.getIndex())
                 .orElseThrow(() -> new EditException(EditFailReason.NOT_FOUND, "사용자를 찾을수 없습니다."));
 
-        if (this.userMapper.selectCountByEmpId(user.getEmpId()) > 1) {
+        if (!UserRegex.empId.matches(user.getEmpId())) {
+            throw new EditException(
+                    EditFailReason.INVALID_EMP_ID_FORMAT,
+                    "사번은 숫자 8~12자리로 입력해주세요."
+            );
+        }
+        if (!dbUser.getEmpId().equals(user.getEmpId())
+                && this.userMapper.selectCountByEmpId(user.getEmpId()) > 0) {
             throw new EditException(
                     EditFailReason.DUPLICATE_EMP_ID,
                     "중복된 사번 입니다."
             );
         }
-        if (this.userMapper.selectCountByEmail(user.getEmail()) > 1) {
+
+        if (!UserRegex.email.matches(user.getEmail())) {
+            throw new EditException(
+                    EditFailReason.INVALID_EMAIL_FORMAT,
+                    "이메일은 @를 포함한 형식으로 입력해주세요."
+            );
+        }
+        if (!dbUser.getEmail().equals(user.getEmail())
+                && this.userMapper.selectCountByEmail(user.getEmail()) > 0) {
             throw new EditException(
                     EditFailReason.DUPLICATE_EMAIL,
                     "중복된 이메일 입니다."
             );
         }
-        if (this.userMapper.selectCountByPhoneNumber(user.getPhoneNumber()) > 1) {
+
+        if (!UserRegex.phoneNumber.matches(user.getPhoneNumber())) {
+            throw new EditException(
+                    EditFailReason.INVALID_PHONE_NUMBER_FORMAT,
+                    "전화번호는 숫자와 하이픈(-)을 포함해 입력해주세요."
+            );
+        }
+        if (!dbUser.getPhoneNumber().equals(user.getPhoneNumber())
+                && this.userMapper.selectCountByPhoneNumber(user.getPhoneNumber()) > 0) {
             throw new EditException(
                     EditFailReason.DUPLICATE_PHONE,
                     "중복된 전화번호 입니다."
