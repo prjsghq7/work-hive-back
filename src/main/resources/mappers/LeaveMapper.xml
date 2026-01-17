@@ -88,8 +88,12 @@
                `u1`.`role_code`   AS `roleCode`,
                `o`.`requester_id` AS `requesterId`,
                `u1`.`name`        AS `requesterName`,
+               `t1`.`display_text` AS `requesterTeamName`,
                `o`.`approver_id`  AS `approverId`,
                `u2`.`name`        AS `approverName`,
+               `t2`.`display_text` AS `approverTeamName`,
+               `r2`.`display_text` AS `approverRoleName`,
+               `u2`.`image_url`   AS `approverProfileImg`,
                `s`.`display_text` AS `stateText`,
                `t`.`display_text` AS `typeText`,
                `o`.`reason`       AS `reason`,
@@ -102,7 +106,10 @@
                  LEFT JOIN `wh`.`day_offs_states` AS `s` ON `o`.`state` = `s`.`code`
                  LEFT JOIN `wh`.`day_offs_types` AS `t` ON `o`.`type` = `t`.`code`
                  LEFT JOIN `wh`.`users` AS `u1` ON `o`.`requester_id` = `u1`.`emp_id`
+                 LEFT JOIN `wh`.`teams` AS `t1` ON `u1`.`team_code` = `t1`.`code`
                  LEFT JOIN `wh`.`users` AS `u2` ON `o`.`approver_id` = `u2`.`emp_id`
+                 LEFT JOIN `wh`.`teams` AS `t2` ON `u2`.`team_code` = `t2`.`code`
+                 LEFT JOIN `wh`.`roles` AS `r2` ON `u2`.`role_code` = `r2`.`code`
         WHERE `o`.`index` = #{index}
     </select>
 

@@ -16,8 +16,12 @@ public class LeaveListDto {
     private int roleCode;
     private String requesterId;
     private String requesterName;
+    private String requesterTeamName;
     private String approverId;
     private String approverName;
+    private String approverTeamName;
+    private String approverRoleName;
+    private String approverProfileImg;
     private String stateText;
     private String typeText;
     private String reason;
