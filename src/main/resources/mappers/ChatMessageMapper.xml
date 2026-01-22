@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dev.workhiveback.mappers.ChatMessageMapper">
+
+    <insert id="insert"
+            parameterType="com.dev.workhiveback.entities.ChatMessageEntity"
+            useGeneratedKeys="true"
+            keyProperty="index"
+            keyColumn="index">
+        INSERT INTO `wh`.`chat_messages`
+            (`room_index`, `sender`, `message`, `created_at`)
+        VALUES
+            (#{roomIndex},
+             #{sender},
+             #{message},
+             #{createdAt})
+    </insert>
+</mapper>

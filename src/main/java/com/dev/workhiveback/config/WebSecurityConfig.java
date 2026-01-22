@@ -56,6 +56,7 @@ public class WebSecurityConfig {
                                         "/leave/**"             //임시: 캘린더 테스트
                                 ).permitAll()
                                 .requestMatchers("/board/**").permitAll()
+                                .requestMatchers("/ws/**").permitAll()
                                 .requestMatchers("/user/login", "/user/register", "/","/user/profile","/api/profile/**").permitAll()
                                 .anyRequest().authenticated()
                 )

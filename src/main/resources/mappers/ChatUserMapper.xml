@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dev.workhiveback.mappers.ChatUserMapper">
+
+    <select id="countByRoomIndexAndEmpId" resultType="java.lang.Integer">
+        SELECT COUNT(0)
+        FROM `wh`.`chat_users`
+        WHERE `room_index` = #{roomIndex}
+          AND `emp_id` = #{empId}
+    </select>
+
+    <select id="selectEmpIdsByRoomIndex" resultType="java.lang.String">
+        SELECT `emp_id`
+        FROM `wh`.`chat_users`
+        WHERE room_index = #{roomIndex}
+    </select>
+
+</mapper>
