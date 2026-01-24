@@ -1,6 +1,7 @@
 package com.dev.workhiveback.controllers;
 
 import com.dev.workhiveback.dtos.leave.LeaveListDto;
+import com.dev.workhiveback.dtos.leave.LeaveStatsDto;
 import com.dev.workhiveback.entities.LeaveEntity;
 import com.dev.workhiveback.entities.UserEntity;
 import com.dev.workhiveback.results.CommonResult;
@@ -43,6 +44,13 @@ public class LeaveController {
                 .build();
 
         return ResponseEntity.ok(CommonResult.success(result));
+    }
+
+    @RequestMapping(value = "/stats", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CommonResult<LeaveStatsDto>> getLeaveStats(
+            @AuthenticationPrincipal UserEntity loginUser) {
+        LeaveStatsDto stats = leaveService.getLeaveStats(loginUser.getEmpId());
+        return ResponseEntity.ok(CommonResult.success(stats));
     }
 
     @RequestMapping(value = "/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

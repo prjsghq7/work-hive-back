@@ -126,4 +126,18 @@
         VALUES (#{leave.requesterId}, #{leave.approverId}, #{leave.state}, #{leave.type}, #{leave.reason}, #{leave.requestDate},
                 #{leave.approveDate}, #{leave.startDate}, #{leave.endDate})
     </insert>
+
+    <select id="selectLeaveStats" resultType="com.dev.workhiveback.dtos.leave.LeaveStatsDto">
+        SELECT 
+            (SELECT COUNT(*) 
+             FROM `wh`.`day_offs` AS `o1`
+             LEFT JOIN `wh`.`day_offs_states` AS `s1` ON `o1`.`state` = `s1`.`code`
+             WHERE `o1`.`requester_id` = #{empId} 
+             AND `s1`.`display_text` = '대기') AS `pendingApprovalCount`,
+            (SELECT COUNT(*) 
+             FROM `wh`.`day_offs` AS `o2`
+             LEFT JOIN `wh`.`day_offs_states` AS `s2` ON `o2`.`state` = `s2`.`code`
+             WHERE `o2`.`approver_id` = #{empId} 
+             AND `s2`.`display_text` = '대기') AS `pendingApproverCount`
+    </select>
 </mapper>

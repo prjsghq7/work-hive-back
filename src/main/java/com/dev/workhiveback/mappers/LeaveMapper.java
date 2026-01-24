@@ -2,6 +2,7 @@ package com.dev.workhiveback.mappers;
 
 import com.dev.workhiveback.dtos.leave.CalendarDto;
 import com.dev.workhiveback.dtos.leave.LeaveListDto;
+import com.dev.workhiveback.dtos.leave.LeaveStatsDto;
 import com.dev.workhiveback.entities.LeaveEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -21,4 +22,6 @@ public interface LeaveMapper {
     int updateLeaveState(@Param(value = "index") int index, @Param(value = "state") int state, @Param(value = "approveDate") java.time.LocalDateTime approveDate);
 
     int insertLeave(@Param(value="leave") LeaveEntity leaveEntity);
+
+    LeaveStatsDto selectLeaveStats(@Param(value = "empId") String empId);
 }

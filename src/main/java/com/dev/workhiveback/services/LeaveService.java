@@ -2,6 +2,7 @@ package com.dev.workhiveback.services;
 
 import com.dev.workhiveback.dtos.leave.CalendarDto;
 import com.dev.workhiveback.dtos.leave.LeaveListDto;
+import com.dev.workhiveback.dtos.leave.LeaveStatsDto;
 import com.dev.workhiveback.entities.LeaveEntity;
 import com.dev.workhiveback.mappers.LeaveMapper;
 import com.dev.workhiveback.results.reasons.calendars.CalendarResult;
@@ -33,6 +34,10 @@ public class LeaveService {
 
     public LeaveListDto findByIndex(int index) {
         return leaveMapper.selectLeaveByIndex(index);
+    }
+
+    public LeaveStatsDto getLeaveStats(String empId) {
+        return leaveMapper.selectLeaveStats(empId);
     }
 
     public String patchAction(int index, String action, String empId) {
