@@ -1,5 +1,6 @@
 package com.dev.workhiveback.exceptions;
 
+import com.dev.workhiveback.exceptions.board.BoardException;
 import com.dev.workhiveback.exceptions.user.EditException;
 import com.dev.workhiveback.exceptions.user.ReasonedException;
 import com.dev.workhiveback.results.CommonResult;
@@ -57,7 +58,8 @@ public class GlobalExceptionHandler {
                     LoginException.class,
                     RegisterException.class,
                     ImageException.class,
-                    EditException.class
+                    EditException.class,
+                    BoardException.class
             }
     )
     public ResponseEntity<CommonResult<Void>> handleReasonedException(ReasonedException e) {

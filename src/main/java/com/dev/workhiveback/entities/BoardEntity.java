@@ -20,4 +20,5 @@ public class BoardEntity {
     private LocalDateTime updatedAt;
     private boolean isDeleted;
     private String name;
+    private int roleCode;
 }

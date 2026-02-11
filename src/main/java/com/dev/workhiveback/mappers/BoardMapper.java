@@ -2,6 +2,7 @@ package com.dev.workhiveback.mappers;
 
 import com.dev.workhiveback.dtos.board.BoardNewDto;
 import com.dev.workhiveback.entities.BoardEntity;
+import com.dev.workhiveback.entities.UserEntity;
 import com.dev.workhiveback.results.reasons.board.BoardResult;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -18,7 +19,10 @@ public interface BoardMapper {
 
     int deleteUpdateBoard(@Param(value = "id")int id);
 
-    List<BoardEntity> selectBoards();
+    List<BoardEntity> selectBoardsPaging(@Param(value = "offset") int offset,
+                                         @Param(value = "size") int size);
+
+    int countBoards();
 
     List<BoardEntity> selectNoticeBoards();
 

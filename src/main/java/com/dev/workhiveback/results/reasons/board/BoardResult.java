@@ -13,4 +13,5 @@ import java.util.List;
 public class BoardResult {
     private List<BoardEntity> boards;
     private BoardEntity board;
+    private int totalCount;
 }
