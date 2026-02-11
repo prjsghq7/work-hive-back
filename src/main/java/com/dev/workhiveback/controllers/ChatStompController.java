@@ -1,6 +1,6 @@
 package com.dev.workhiveback.controllers;
 
-import com.dev.workhiveback.entities.ChatMessageEntity;
+import com.dev.workhiveback.dtos.chat.ChatMessageDto;
 import com.dev.workhiveback.services.ChatService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import java.security.Principal;
 @Controller
 @MessageMapping("/chat")
 @RequiredArgsConstructor
-public class ChatController {
+public class ChatStompController {
 
     private final SimpMessagingTemplate messagingTemplate;
 
@@ -31,7 +31,7 @@ public class ChatController {
         String empId = principal.getName();
         int roomIndex = request.getRoomIndex();
 
-        ChatMessageEntity saved = chatService.sendMessage(roomIndex, empId, request.getMessage());
+        ChatMessageDto saved = chatService.sendMessage(roomIndex, empId, request.getMessage());
         if (saved == null) {
             return;
         }
@@ -47,4 +47,5 @@ public class ChatController {
         private int roomIndex;
         private String message;
     }
+
 }

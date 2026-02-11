@@ -15,4 +15,43 @@
              #{message},
              #{createdAt})
     </insert>
+
+    <select id="selectDtoByIndex" resultType="com.dev.workhiveback.dtos.chat.ChatMessageDto">
+        SELECT `m`.`index`        AS `index`,
+               `m`.`room_index`   AS `roomIndex`,
+               `m`.`message`      AS `message`,
+               `m`.`created_at`   AS `createdAt`,
+               `u`.`emp_id`       AS `senderEmpId`,
+               `u`.`name`         AS `senderName`,
+               `t`.`display_text` AS `senderTeamName`,
+               `r`.`display_text` AS `senderRoleName`,
+               `u`.`image_url`    AS `senderImageUrl`
+        FROM `wh`.`chat_messages` `m`
+                 LEFT JOIN `wh`.`users` `u` ON `m`.`sender` = `u`.`emp_id`
+                 LEFT JOIN `wh`.`teams` `t` ON `u`.`team_code` = `t`.`code`
+                 LEFT JOIN `wh`.`roles` `r` ON `u`.`role_code` = `r`.`code`
+        WHERE `m`.`index` = #{index}
+    </select>
+
+    <select id="selectByRoomIndex" resultType="com.dev.workhiveback.dtos.chat.ChatMessageDto">
+        SELECT `m`.`index`      AS `index`,
+               `m`.room_index   AS `roomIndex`,
+               `m`.message      AS `message`,
+               `m`.created_at   AS `createdAt`,
+               `u`.emp_id       AS `senderEmpId`,
+               `u`.name         AS `senderName`,
+               `t`.display_text AS `senderTeamName`,
+               `r`.display_text AS `senderRoleName`,
+               `u`.image_url    AS `senderImageUrl`
+        FROM `wh`.`chat_messages` `m`
+                 LEFT JOIN `wh`.`users` `u` ON `m`.`sender` = `u`.`emp_id`
+                 LEFT JOIN `wh`.`teams` `t` ON `u`.`team_code` = `t`.`code`
+                 LEFT JOIN `wh`.`roles` `r` ON `u`.`role_code` = `r`.`code`
+        WHERE `m`.`room_index` = #{roomIndex}
+        <if test="beforeIndex != null">
+            AND `m`.`index` &lt; #{beforeIndex}
+        </if>
+        ORDER BY `m`.`index` DESC
+        LIMIT #{limit}
+    </select>
 </mapper>

@@ -1,5 +1,6 @@
 package com.dev.workhiveback.services;
 
+import com.dev.workhiveback.dtos.chat.ChatMessageDto;
 import com.dev.workhiveback.entities.ChatMessageEntity;
 import com.dev.workhiveback.mappers.ChatMessageMapper;
 import com.dev.workhiveback.mappers.ChatRoomMapper;
@@ -9,16 +10,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ChatService {
+
+    private static final int CHAT_MESSAGE_LIMIT = 30;
+
     private final ChatRoomMapper chatRoomMapper;
     private final ChatUserMapper chatUserMapper;
     private final ChatMessageMapper chatMessageMapper;
 
     @Transactional
-    public ChatMessageEntity sendMessage(int roomIndex, String empId, String message) {
+    public ChatMessageDto sendMessage(int roomIndex, String empId, String message) {
 
         // 로그인 정보 없음 (Principal 없음 또는 토큰 문제)
         if (empId == null || empId.isBlank()) {
@@ -53,6 +59,42 @@ public class ChatService {
             return null;
         }
 
-        return entity;
+        // 핵심: insert 결과로 생성된 PK(index)로 DTO 재조회
+        if (entity.getIndex() <= 0) {
+            return null;
+        }
+
+        ChatMessageDto dto = chatMessageMapper.selectDtoByIndex(entity.getIndex());
+        if (dto == null) {
+            return null;
+        }
+
+        dto.setMine(empId.equals(dto.getSenderEmpId()));
+        return dto;
+    }
+
+    public List<ChatMessageDto> getMessages(int roomIndex,
+                                            Integer beforeIndex,
+                                            String myEmpId) {
+        if (myEmpId == null || myEmpId.isBlank()) {
+            return null;
+        }
+
+        if (roomIndex <= 0) {
+            return null;
+        }
+
+        List<ChatMessageDto> messages = chatMessageMapper.selectByRoomIndex(roomIndex, beforeIndex, CHAT_MESSAGE_LIMIT);
+        if (messages == null || messages.isEmpty()) {
+            return List.of();
+        }
+
+        Collections.reverse(messages);
+
+        for (ChatMessageDto dto : messages) {
+            dto.setMine(myEmpId.equals(dto.getSenderEmpId()));
+        }
+
+        return messages;
     }
 }
