@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dev.workhiveback.mappers.ScheduleMapper">
+
+    <insert id="insertSchedule" parameterType="com.dev.workhiveback.entities.ScheduleEntity"
+            useGeneratedKeys="true" keyProperty="index" keyColumn="index">
+        INSERT INTO `wh`.`schedules` (`title`, `detail`, `start_date`, `end_date`, `state`)
+        VALUES (#{title}, #{detail}, #{startDate}, #{endDate}, #{state})
+    </insert>
+
+    <insert id="insertScheduleMember">
+        INSERT INTO `wh`.`schedule_members` (`schedule_index`, `member_id`, `user_team_code`, `is_manager`)
+        VALUES (#{scheduleIndex}, #{memberId}, #{userTeamCode}, #{isManager})
+    </insert>
+
+</mapper>
