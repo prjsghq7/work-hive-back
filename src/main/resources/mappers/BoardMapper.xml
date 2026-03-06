@@ -104,4 +104,55 @@
         where is_deleted = false
     </select>
 
+    <!-- ===== Notice 페이징 ===== -->
+    <select id="selectNoticePaging" resultType="com.dev.workhiveback.entities.BoardEntity">
+        select b.`index` as `index`,
+               b.`emp_id` as `empId`,
+               u.`name` as `name`,
+               b.`type` as `type`,
+               b.`title` as `title`,
+               b.`content` as `content`,
+               b.`view` as `view`,
+               b.`created_at` as `createdAt`
+        from `wh`.`boards` b
+                 join `wh`.`users` u on b.`emp_id` = u.`emp_id`
+        where b.`type` = 1
+          and b.`is_deleted` = false
+        order by b.`index` desc
+        limit #{size} offset #{offset}
+    </select>
+
+    <select id="countNotice" resultType="int">
+        select count(*)
+        from `wh`.`boards`
+        where `type` = 1
+          and `is_deleted` = false
+    </select>
+
+
+    <!-- ===== FamilyEvent 페이징 ===== -->
+    <select id="selectFamilyEventPaging" resultType="com.dev.workhiveback.entities.BoardEntity">
+        select b.`index` as `index`,
+               b.`emp_id` as `empId`,
+               u.`name` as `name`,
+               b.`type` as `type`,
+               b.`title` as `title`,
+               b.`content` as `content`,
+               b.`view` as `view`,
+               b.`created_at` as `createdAt`
+        from `wh`.`boards` b
+                 join `wh`.`users` u on b.`emp_id` = u.`emp_id`
+        where b.`type` = 2
+          and b.`is_deleted` = false
+        order by b.`index` desc
+        limit #{size} offset #{offset}
+    </select>
+
+    <select id="countFamilyEvent" resultType="int">
+        select count(*)
+        from `wh`.`boards`
+        where `type` = 2
+          and `is_deleted` = false
+    </select>
+
 </mapper>

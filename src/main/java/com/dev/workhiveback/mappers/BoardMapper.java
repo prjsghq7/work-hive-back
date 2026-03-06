@@ -22,6 +22,18 @@ public interface BoardMapper {
     List<BoardEntity> selectBoardsPaging(@Param(value = "offset") int offset,
                                          @Param(value = "size") int size);
 
+    // ===== Notice 페이징 =====
+    List<BoardEntity> selectNoticePaging(@Param("offset") int offset,
+                                         @Param("size") int size);
+
+    int countNotice();
+
+    // ===== FamilyEvent 페이징 =====
+    List<BoardEntity> selectFamilyEventPaging(@Param("offset") int offset,
+                                              @Param("size") int size);
+
+    int countFamilyEvent();
+
     int countBoards();
 
     List<BoardEntity> selectNoticeBoards();

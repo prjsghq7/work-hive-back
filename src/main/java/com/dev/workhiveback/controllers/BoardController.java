@@ -39,22 +39,32 @@ public class BoardController {
     }
 
     @RequestMapping(value = "/notice", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CommonResult<BoardResult>> getNoticeBoard() {
-        List<BoardEntity> boards = boardService.NoticeAll();
+    public ResponseEntity<CommonResult<BoardResult>> getNoticeBoard(@RequestParam(defaultValue = "1") int page) {
+        int size = 10;
+
+        List<BoardEntity> boards = boardService.findNotice(page, size);
+        int totalCount = boardService.countNotice();
 
         BoardResult result = BoardResult.builder()
                 .boards(boards)
+                .totalCount(totalCount)
                 .build();
+
         return ResponseEntity.ok(CommonResult.success(result));
     }
 
     @RequestMapping(value = "/family-event", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CommonResult<BoardResult>> getFamilyEventBoard() {
-        List<BoardEntity> boards = boardService.FamilyEventAll();
+    public ResponseEntity<CommonResult<BoardResult>> getFamilyEventBoard(@RequestParam(defaultValue = "1") int page) {
+        int size = 10;
+
+        List<BoardEntity> boards = boardService.findFamilyEvent(page, size);
+        int totalCount = boardService.countFamilyEvent();
 
         BoardResult result = BoardResult.builder()
                 .boards(boards)
+                .totalCount(totalCount)
                 .build();
+
         return ResponseEntity.ok(CommonResult.success(result));
     }
 

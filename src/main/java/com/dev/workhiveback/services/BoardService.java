@@ -97,4 +97,24 @@ public class BoardService {
     public List<BoardEntity> FamilyEventAll() {
         return boardMapper.selectFamilyEventBoards();
     }
+
+    // ===== Notice =====
+    public List<BoardEntity> findNotice(int page, int size) {
+        int offset = (page - 1) * size;
+        return boardMapper.selectNoticePaging(offset, size);
+    }
+
+    public int countNotice() {
+        return boardMapper.countNotice();
+    }
+
+    // ===== FamilyEvent =====
+    public List<BoardEntity> findFamilyEvent(int page, int size) {
+        int offset = (page - 1) * size;
+        return boardMapper.selectFamilyEventPaging(offset, size);
+    }
+
+    public int countFamilyEvent() {
+        return boardMapper.countFamilyEvent();
+    }
 }
