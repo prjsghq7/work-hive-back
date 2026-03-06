@@ -2,6 +2,29 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dev.workhiveback.mappers.ScheduleMapper">
 
+    <select id="selectCalendarData" resultType="com.dev.workhiveback.dtos.leave.CalendarDto">
+        SELECT `s`.`index`        AS `index`,
+               `s`.`title`        AS `title`,
+               `st`.`display_text` AS `typeText`,
+               `s`.`start_date`   AS `startDate`,
+               `s`.`end_date`     AS `endDate`,
+               'schedules'        AS `calendarType`
+        FROM `wh`.`schedules` AS `s`
+                 LEFT JOIN `wh`.`schedule_states` AS `st` ON `s`.`state` = `st`.`code`
+                 LEFT JOIN `wh`.`schedule_members` AS `sm` ON `s`.`index` = `sm`.`schedule_index`
+                 LEFT JOIN `wh`.`users` AS `u` ON `sm`.`member_id` = `u`.`emp_id`
+        <where>
+            <if test="filter == 'team'">
+                `u`.`team_code` = #{teamCode}
+            </if>
+            <if test="filter == 'personal'">
+                `sm`.`member_id` = #{empId}
+            </if>
+        </where>
+        GROUP BY `s`.`index`, `s`.`title`, `st`.`display_text`, `s`.`start_date`, `s`.`end_date`
+        ORDER BY `s`.`start_date` ASC
+    </select>
+
     <insert id="insertSchedule" parameterType="com.dev.workhiveback.entities.ScheduleEntity"
             useGeneratedKeys="true" keyProperty="index" keyColumn="index">
         INSERT INTO `wh`.`schedules` (`title`, `detail`, `start_date`, `end_date`, `state`)

@@ -1,9 +1,11 @@
 package com.dev.workhiveback.services;
 
+import com.dev.workhiveback.dtos.leave.CalendarDto;
 import com.dev.workhiveback.dtos.schedule.ScheduleMemberDto;
 import com.dev.workhiveback.dtos.schedule.ScheduleRegisterDto;
 import com.dev.workhiveback.entities.ScheduleEntity;
 import com.dev.workhiveback.mappers.ScheduleMapper;
+import com.dev.workhiveback.results.reasons.calendars.CalendarResult;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -15,6 +17,11 @@ public class ScheduleService {
 
     public ScheduleService(ScheduleMapper scheduleMapper) {
         this.scheduleMapper = scheduleMapper;
+    }
+
+    public CalendarResult getCalendarData(String filter, String empId, int teamCode) {
+        List<CalendarDto> calendarDtoList = scheduleMapper.selectCalendarData(filter, empId, teamCode);
+        return new CalendarResult(calendarDtoList);
     }
 
     public void register(ScheduleRegisterDto register) {
