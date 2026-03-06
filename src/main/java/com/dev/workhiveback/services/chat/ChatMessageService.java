@@ -1,11 +1,13 @@
-package com.dev.workhiveback.services;
+package com.dev.workhiveback.services.chat;
 
 import com.dev.workhiveback.dtos.chat.ChatMessageDto;
+import com.dev.workhiveback.dtos.chat.ChatNotifyDto;
 import com.dev.workhiveback.entities.ChatMessageEntity;
-import com.dev.workhiveback.mappers.ChatMessageMapper;
-import com.dev.workhiveback.mappers.ChatRoomMapper;
+import com.dev.workhiveback.mappers.chat.ChatMessageMapper;
+import com.dev.workhiveback.mappers.chat.ChatRoomMapper;
 import com.dev.workhiveback.mappers.ChatUserMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,13 +17,30 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ChatService {
+public class ChatMessageService {
 
     private static final int CHAT_MESSAGE_LIMIT = 30;
 
     private final ChatRoomMapper chatRoomMapper;
     private final ChatUserMapper chatUserMapper;
     private final ChatMessageMapper chatMessageMapper;
+
+    private final SimpMessagingTemplate messagingTemplate;
+
+    @Transactional
+    public void sendAndPublish(int roomIndex, String empId, String message) {
+
+        ChatMessageDto saved = sendMessage(roomIndex, empId, message);
+        if (saved == null) {
+            return;
+        }
+
+        // 1) 같은 방 구독자에게 브로드캐스트
+        broadcastMessage(roomIndex, saved);
+
+        // 2) 방 멤버 전체에게 개인 알림
+        notifyRoomMembers(roomIndex, empId);
+    }
 
     @Transactional
     public ChatMessageDto sendMessage(int roomIndex, String empId, String message) {
@@ -71,6 +90,33 @@ public class ChatService {
 
         dto.setMine(empId.equals(dto.getSenderEmpId()));
         return dto;
+    }
+
+    private void broadcastMessage(int roomIndex, ChatMessageDto saved) {
+        messagingTemplate.convertAndSend("/topic/chat/room/" + roomIndex, saved);
+    }
+
+    private void notifyRoomMembers(int roomIndex, String senderEmpId) {
+
+        List<String> memberEmpIds = chatUserMapper.selectEmpIdsByRoomIndex(roomIndex);
+        if (memberEmpIds == null || memberEmpIds.isEmpty()) {
+            return;
+        }
+
+        ChatNotifyDto payload = new ChatNotifyDto(roomIndex);
+
+        for (String targetEmpId : memberEmpIds) {
+            if (targetEmpId == null || targetEmpId.isBlank()) continue;
+
+            // 보낸 사람 제외
+            if (senderEmpId.equals(targetEmpId)) continue;
+
+            messagingTemplate.convertAndSendToUser(
+                    targetEmpId,
+                    "/queue/chat-notify",
+                    payload
+            );
+        }
     }
 
     public List<ChatMessageDto> getMessages(int roomIndex,

@@ -1,4 +1,4 @@
-package com.dev.workhiveback.mappers;
+package com.dev.workhiveback.mappers.chat;
 
 import com.dev.workhiveback.dtos.chat.ChatMessageDto;
 import com.dev.workhiveback.entities.ChatMessageEntity;

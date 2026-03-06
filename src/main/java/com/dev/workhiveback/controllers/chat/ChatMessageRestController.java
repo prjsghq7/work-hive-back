@@ -1,7 +1,7 @@
-package com.dev.workhiveback.controllers;
+package com.dev.workhiveback.controllers.chat;
 
 import com.dev.workhiveback.dtos.chat.ChatMessageDto;
-import com.dev.workhiveback.services.ChatService;
+import com.dev.workhiveback.services.chat.ChatMessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,9 +11,9 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/chat")
-public class ChatRestController {
+public class ChatMessageRestController {
 
-    private final ChatService chatService;
+    private final ChatMessageService chatMessageService;
 
     @GetMapping("/messages")
     public List<ChatMessageDto> getMessages(
@@ -28,7 +28,7 @@ public class ChatRestController {
 
         String empId = principal.getName();
 
-        return chatService.getMessages(roomIndex, beforeIndex, empId);
+        return chatMessageService.getMessages(roomIndex, beforeIndex, empId);
     }
 }
 

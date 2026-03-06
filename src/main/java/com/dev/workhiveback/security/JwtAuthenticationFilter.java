@@ -43,6 +43,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     //필터 내부 로직: 요청에서 jwt파싱 -> 검증 -> 인증 객체 생성 -> security context 설정
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        String uri = request.getRequestURI();
+        String auth = request.getHeader("Authorization");
+        System.out.println("[JWT] " + request.getMethod() + " " + uri);
+        System.out.println("[JWT] Authorization=" + auth);
+
         try {
             String token = parserBearer(request);//Authorization 헤더에서 jwt 토큰 파싱
 //            log.info("doFilterInternal");
@@ -76,8 +81,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.setContext(securityContext);
                 System.out.println(securityContext.getAuthentication().getAuthorities());
             }
+            System.out.println("[JWT] after setAuthentication: " + SecurityContextHolder.getContext().getAuthentication());
         } catch (Exception e) {
             log.error("could not set user authenticaion in security context", e);
+
+            System.out.println("[JWT] validate failed: " + e.getClass().getSimpleName() + " " + e.getMessage());
         }
 
         filterChain.doFilter(request, response);

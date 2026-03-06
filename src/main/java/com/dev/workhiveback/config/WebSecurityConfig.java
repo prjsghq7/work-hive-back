@@ -43,6 +43,7 @@ public class WebSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))//세션 사용 안함 (jwt 기반 인증)
                 .authorizeHttpRequests(auth ->
                         auth
+                                .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                                 .requestMatchers("/user/login",
                                         "/user/register",
                                         "/",

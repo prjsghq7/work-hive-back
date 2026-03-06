@@ -1,7 +1,7 @@
-package com.dev.workhiveback.controllers;
+package com.dev.workhiveback.controllers.chat;
 
 import com.dev.workhiveback.dtos.chat.ChatMessageDto;
-import com.dev.workhiveback.services.ChatService;
+import com.dev.workhiveback.services.chat.ChatMessageService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -16,9 +16,7 @@ import java.security.Principal;
 @RequiredArgsConstructor
 public class ChatStompController {
 
-    private final SimpMessagingTemplate messagingTemplate;
-
-    private final ChatService chatService;
+    private final ChatMessageService chatMessageService;
 
     @MessageMapping("/send")
     public void send(ChatSendRequest request, Principal principal) {
@@ -31,14 +29,11 @@ public class ChatStompController {
         String empId = principal.getName();
         int roomIndex = request.getRoomIndex();
 
-        ChatMessageDto saved = chatService.sendMessage(roomIndex, empId, request.getMessage());
-        if (saved == null) {
-            return;
-        }
+        chatMessageService.sendAndPublish(roomIndex, empId, request.getMessage());
 
-        // 같은 방 구독자에게 브로드캐스트
-        String destination = "/topic/chat/room/" + roomIndex;
-        messagingTemplate.convertAndSend(destination, saved);
+//        // 같은 방 구독자에게 브로드캐스트
+//        String destination = "/topic/chat/room/" + roomIndex;
+//        messagingTemplate.convertAndSend(destination, saved);
     }
 
     @Getter

@@ -1,5 +1,61 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.dev.workhiveback.mappers.ChatRoomMapper">
+<mapper namespace="com.dev.workhiveback.mappers.chat.ChatRoomMapper">
+
+    <select id="selectMyRoomPreviewList" resultType="com.dev.workhiveback.dtos.chat.ChatRoomPreviewDto">
+        SELECT `r`.`index`                                                       AS `roomIndex`,
+               `r`.`title`                                                       AS `title`,
+               `lm`.`message`                                                    AS `lastMessage`,
+               `lm`.`created_at`                                                 AS `lastMessageAt`,
+               (SELECT COUNT(*)
+                FROM `wh`.`chat_messages` `m`
+                         LEFT JOIN `wh`.`chat_room_reads` `cr`
+                                   ON `cr`.`room_index` = `r`.`index`
+                                       AND `cr`.`emp_id` = #{empId}
+                WHERE `m`.`room_index` = `r`.`index`
+                  AND `m`.`index` > COALESCE(`cr`.`last_read_message_index`, 0)) AS `unreadCount`
+        FROM `wh`.`chat_rooms` `r`
+                 INNER JOIN `wh`.`chat_users` `u`
+                            ON `u`.`room_index` = `r`.`index`
+                                AND `u`.`emp_id` = #{empId}
+                 LEFT JOIN (SELECT `m2`.`room_index` AS `room_index`,
+                                   MAX(`m2`.`index`) AS `max_index`
+                            FROM `wh`.`chat_messages` `m2`
+                            GROUP BY `m2`.`room_index`) `mm` ON `mm`.`room_index` = `r`.`index`
+                 LEFT JOIN `wh`.`chat_messages` `lm`
+                           ON `lm`.`index` = `mm`.`max_index`
+        ORDER BY `lm`.`created_at` DESC, `r`.`index` DESC
+    </select>
+
+    <select id="selectRoomPreview" resultType="com.dev.workhiveback.dtos.chat.ChatRoomPreviewDto">
+        SELECT `r`.`index`       AS `roomIndex`,
+               `r`.`title`       AS `title`,
+               `lm`.`message`    AS `lastMessage`,
+               `lm`.`created_at` AS `lastMessageAt`,
+               (
+                   SELECT COUNT(*)
+                   FROM `wh`.`chat_messages` `m`
+                            LEFT JOIN `wh`.`chat_room_reads` `cr`
+                                      ON `cr`.`room_index` = `r`.`index`
+                                          AND `cr`.`emp_id` = #{empId}
+                   WHERE `m`.`room_index` = `r`.`index`
+                     AND `m`.`index` > COALESCE(`cr`.`last_read_message_index`, 0)
+               )                AS `unreadCount`
+        FROM `wh`.`chat_rooms` `r`
+                 INNER JOIN `wh`.`chat_users` `u`
+                            ON `u`.`room_index` = `r`.`index`
+                                AND `u`.`emp_id` = #{empId}
+                 LEFT JOIN (
+            SELECT `m2`.`room_index` AS `room_index`,
+                   MAX(`m2`.`index`) AS `max_index`
+            FROM `wh`.`chat_messages` `m2`
+            GROUP BY `m2`.`room_index`
+        ) `mm` ON `mm`.`room_index` = `r`.`index`
+                 LEFT JOIN `wh`.`chat_messages` `lm`
+                           ON `lm`.`index` = `mm`.`max_index`
+        WHERE `r`.`index` = #{roomIndex}
+        ORDER BY `lm`.`created_at` DESC, `r`.`index` DESC
+    </select>
+
 
 </mapper>
